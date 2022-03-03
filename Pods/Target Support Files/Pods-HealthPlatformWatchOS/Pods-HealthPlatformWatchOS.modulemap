@@ -1,0 +1,6 @@
+framework module Pods_HealthPlatformWatchOS {
+  umbrella header "Pods-HealthPlatformWatchOS-umbrella.h"
+
+  export *
+  module * { export * }
+}
