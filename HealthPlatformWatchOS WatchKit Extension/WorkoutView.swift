@@ -29,11 +29,6 @@ struct WorkoutView: View {
             Text("HR: \(workoutSession.heartrate, specifier: "%.0f") bpm")
             .font(Font.system(size: 20, weight: .regular, design: .default).monospacedDigit())
             Spacer().frame(width: 1, height: 4, alignment: .leading)
-            
-            // The heart rate variability
-            Text("HRV: \(workoutSession.heartRateVariability, specifier: "%.0f") ms")
-            .font(Font.system(size: 20, weight: .regular, design: .default).monospacedDigit())
-             
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .leading)
     }

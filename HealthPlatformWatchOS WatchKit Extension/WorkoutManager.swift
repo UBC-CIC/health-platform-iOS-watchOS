@@ -21,8 +21,11 @@ class WorkoutManager: NSObject, ObservableObject, WCSessionDelegate {
     
     /// - Tag: Publishers
     @Published var heartrate: Double = 0
-    @Published var heartRateVariability: Double = 0
     @Published var elapsedSeconds: Int = 0
+    
+    @IBOutlet weak var labelX: WKInterfaceLabel!
+    @IBOutlet weak var labelY: WKInterfaceLabel!
+    @IBOutlet weak var labelZ: WKInterfaceLabel!
     
     // The app's workout state.
     var running: Bool = false
@@ -196,7 +199,6 @@ class WorkoutManager: NSObject, ObservableObject, WCSessionDelegate {
         DispatchQueue.main.async {
             self.elapsedSeconds = 0
             self.heartrate = 0
-            self.heartRateVariability = 0
         }
     }
 
@@ -218,7 +220,7 @@ class WorkoutManager: NSObject, ObservableObject, WCSessionDelegate {
     
     func sendDataToPhone(HR: Double, HRV: Double) {
         if (watchSession.isReachable) {
-            watchSession.sendMessage(["deviceID": clientID, "heartRate" : heartrate, "heartRateVariability" : heartRateVariability], replyHandler: nil) { (error) in
+            watchSession.sendMessage(["deviceID": clientID, "heartRate" : heartrate], replyHandler: nil) { (error) in
                 print("Error sending data: \(error.localizedDescription)")
             }
             print("SENT")
@@ -226,6 +228,7 @@ class WorkoutManager: NSObject, ObservableObject, WCSessionDelegate {
             print("Iphone session not available")
         }
     }
+    
     // MARK: - Update the UI
     // Update the published values.
     func updateForStatistics(_ statistics: HKStatistics?) {
@@ -246,10 +249,9 @@ class WorkoutManager: NSObject, ObservableObject, WCSessionDelegate {
                 let value = statistics.mostRecentQuantity()?.doubleValue(for: heartRateUnit)
                 let roundedValue = Double( round( 1 * value! ) / 1 )
                 self.heartrate = roundedValue
-                self.sendDataToPhone(HR: self.heartrate, HRV: self.heartRateVariability)
+                self.sendDataToPhone(HR: self.heartrate, HRV: 0)
             case HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN):
-                print("HRV")
-                self.heartRateVariability = statistics.mostRecentQuantity()?.doubleValue(for: HKUnit(from: "count/min")) ?? -1
+                return
             default:
                 return
             }
