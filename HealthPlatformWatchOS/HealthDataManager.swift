@@ -4,26 +4,45 @@ import HealthKit
 import UIKit
 
 class HealthDataManager: NSObject, ObservableObject {
-    
+    //Published variables which are updated in the UI
     @Published var deviceID = "N/A"
     @Published var connectionStatus = "Not Connected"
     @Published var lastQueryTime = ""
     @Published var HRDataPointsSent = 0
     @Published var HRVDataPointsSent = 0
+    //Initialize the MQTT client
     let mqttClient = AWSViewModel()
+    //Initialize HealthKit Store
     let healthStore = HKHealthStore()
+    //For storing user information required for next app launch
     let defaults = UserDefaults.standard
+    //Timer for updating IoT connection status
     var timer = Timer()
     
-    //Enable data sending from watch to phone via bluetooth
+    //Set deviceID, lastQueryTime from defaults, set connection status, and request HealthKit authorization.
     func setupSession() {
         DispatchQueue.main.async {
             self.deviceID = UIDevice.current.identifierForVendor!.uuidString
             self.lastQueryTime = self.defaults.string(forKey: "lastQueryTime") ?? "Never Queried"
         }
         updateConnectionStatus()
+        
+        let typesToShare: Set = [
+            HKQuantityType.workoutType()
+        ]
+        // The quantity types to read from the health store.
+        let typesToRead: Set = [
+            HKQuantityType.quantityType(forIdentifier: .heartRate)!,
+            HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!,
+        ]
+        
+        // Request authorization for those quantity types.
+        healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
+            // Handle error.
+        }
     }
     
+    //Repeatedly check for connection status from the MQTT client
     func updateConnectionStatus() {
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
                 DispatchQueue.main.async {
@@ -33,11 +52,12 @@ class HealthDataManager: NSObject, ObservableObject {
         })
     }
 
-    //Query from HealthKit the latest HRV data within the last 24hrs
+    //Query from HealthKit the latest HRV values since the last query, default query is from the last 24hrs.
     func queryHRVData(){
         let HRVType = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)
 
         let sortDescriptor = NSSortDescriptor(key:HKSampleSortIdentifierStartDate, ascending: false)
+        //Get unrecorded time from from current query time minus the last query time, and set record new times in user defulats
         var startDate: Date
         if defaults.string(forKey: "isHRVSet") != nil {
             let lastQueryTime = defaults.integer(forKey: "lastHRVQueryTime")
@@ -84,11 +104,12 @@ class HealthDataManager: NSObject, ObservableObject {
         healthStore.execute(sampleQuery)
     }
     
+    //Query from HealthKit the latest Heart Rate values since the last query, default query is from the last 24hrs.
     func queryHeartRateData() {
         let HRVType = HKQuantityType.quantityType(forIdentifier: .heartRate)
 
         let sortDescriptor = NSSortDescriptor(key:HKSampleSortIdentifierStartDate, ascending: false)
-        
+        //Get unrecorded time from from current query time minus the last query time, and set record new times in user defulats
         var startDate: Date
         if defaults.string(forKey: "isHRSet") != nil {
             let lastQueryTime = defaults.integer(forKey: "lastHRQueryTime")
@@ -124,6 +145,7 @@ class HealthDataManager: NSObject, ObservableObject {
                     
                     count += 1
                 }
+                //Update the latest query time for the UI
                 let date = Date()
                 let calendar = Calendar.current
                 let hour = calendar.component(.hour, from: date)
@@ -148,7 +170,8 @@ class HealthDataManager: NSObject, ObservableObject {
         }
         healthStore.execute(sampleQuery)
     }
-        
+    
+    //Convert string array to JSON
     func dataToJson(from object:Any) -> String? {
         guard let data = try? JSONSerialization.data(withJSONObject: object, options: []) else {
             return nil
