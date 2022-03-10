@@ -1,67 +1,148 @@
 
 import Foundation
 import HealthKit
-import WatchConnectivity
+import UIKit
 
-class HealthDataManager: NSObject, ObservableObject, WCSessionDelegate {
+class HealthDataManager: NSObject, ObservableObject {
     
     @Published var deviceID = "N/A"
-    @Published var heartRate : Double = 0
-    @Published var heartRateVariability : Double = 0
-    var session = WCSession.default
+    @Published var connectionStatus = "Not Connected"
+    @Published var lastQueryTime = ""
+    @Published var HRDataPointsSent = 0
+    @Published var HRVDataPointsSent = 0
     let mqttClient = AWSViewModel()
     let healthStore = HKHealthStore()
-   
+    let defaults = UserDefaults.standard
+    var timer = Timer()
+    
     //Enable data sending from watch to phone via bluetooth
     func setupSession() {
-        if WCSession.isSupported() {
-            session.delegate = self
-            session.activate()
+        DispatchQueue.main.async {
+            self.deviceID = UIDevice.current.identifierForVendor!.uuidString
+            self.lastQueryTime = self.defaults.string(forKey: "lastQueryTime") ?? "Never Queried"
         }
+        updateConnectionStatus()
     }
     
-    //Recieve data message from watch
-    func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
-        if message["deviceID"] != nil && message["heartRate"] != nil {
-            print("RECIEVED HR: \(String(describing: message["heartRate"]))")
-            DispatchQueue.main.async {
-                self.deviceID = message["deviceID"] as! String
-                if (message["heartRate"] as! Double != 0) {
-                    self.heartRate = message["heartRate"] as! Double
-                    self.sendDataToAWS(measurement: self.heartRate, measurementType: "HeartRate")
-                }
-                self.queryHRVData()
+    func updateConnectionStatus() {
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
+                DispatchQueue.main.async {
+                    self.connectionStatus = self.mqttClient.connectionStatus
+                
             }
-        } else {
-            print("Did not receive heart rate =[")
-        }
+        })
     }
-    
-    //WCSession activation state
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-            print("activationDidCompleteWith activationState:\(activationState) error:\(String(describing: error))")
-    }
-    
+
     //Query from HealthKit the latest HRV data within the last 24hrs
     func queryHRVData(){
         let HRVType = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)
 
         let sortDescriptor = NSSortDescriptor(key:HKSampleSortIdentifierStartDate, ascending: false)
-
-        let startDate = Date() - 24 * 60 * 60 // start date is 24hrs
+        var startDate: Date
+        if defaults.string(forKey: "isHRVSet") != nil {
+            let lastQueryTime = defaults.integer(forKey: "lastHRVQueryTime")
+            defaults.set(Int(Date().timeIntervalSince1970), forKey: "currentHRVQueryTime")
+            let timeDifference = Double(defaults.integer(forKey: "currentHRVQueryTime") - lastQueryTime)
+            startDate = Date() - timeDifference
+            defaults.set(Int(Date().timeIntervalSince1970), forKey: "lastHRVQueryTime")
+        } else {
+            defaults.set((Int(Date().timeIntervalSince1970)), forKey: "lastHRVQueryTime")
+            defaults.set("Yes", forKey: "isHRVSet")
+            print("default set")
+            startDate = Date() - 24 * 60 * 60 // start date is 24hrs
+        }
+        
         //  Set the Predicates & Interval
         let predicate: NSPredicate? = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: HKQueryOptions.strictEndDate)
-        let sampleQuery = HKSampleQuery(sampleType: HRVType!, predicate: predicate, limit: 30, sortDescriptors: [sortDescriptor]) { sampleQuery, results, error  in
+        let sampleQuery = HKSampleQuery(sampleType: HRVType!, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor]) { sampleQuery, results, error  in
             if(error == nil) {
+                var count = 0
+                var resultStringData = ""
+                var resultStringTimestamps = ""
                 for result in (results as? [HKQuantitySample])! {
                     let latestHRV = result.quantity.doubleValue(for: HKUnit.secondUnit(with: .milli))
-                    if (self.heartRateVariability != latestHRV) {
-                        DispatchQueue.main.async {
-                            self.heartRateVariability = latestHRV
-                            self.sendDataToAWS(measurement: self.heartRateVariability, measurementType: "HeartRateVariability")
-                        }
+                    let formatter = ISO8601DateFormatter()
+                    formatter.formatOptions.insert(.withFractionalSeconds)
+                    if (count == 0) {
+                        resultStringData = String(round(latestHRV))
+                        resultStringTimestamps = formatter.string(from:(result.endDate))
+                    } else {
+                        resultStringData = resultStringData + ", " + String(latestHRV)
+                        resultStringTimestamps = resultStringTimestamps + ", " + formatter.string(from:(result.endDate))
                     }
-                    break
+                    
+                    count += 1
+                }
+                DispatchQueue.main.async {
+                    self.HRVDataPointsSent = count
+                }
+                if (count > 0) {
+                    self.sendDataToAWS(measurements: resultStringData, measurementType: "HeartRateVariability", timestamps: resultStringTimestamps)
+                }
+            }
+        }
+        healthStore.execute(sampleQuery)
+    }
+    
+    func queryHeartRateData() {
+        let HRVType = HKQuantityType.quantityType(forIdentifier: .heartRate)
+
+        let sortDescriptor = NSSortDescriptor(key:HKSampleSortIdentifierStartDate, ascending: false)
+        
+        var startDate: Date
+        if defaults.string(forKey: "isHRSet") != nil {
+            let lastQueryTime = defaults.integer(forKey: "lastHRQueryTime")
+            print(lastQueryTime)
+            defaults.set(Int(Date().timeIntervalSince1970), forKey: "currentHRQueryTime")
+            let timeDifference = Double(defaults.integer(forKey: "currentHRQueryTime") - lastQueryTime)
+            startDate = Date() - timeDifference
+            defaults.set(Int(Date().timeIntervalSince1970), forKey: "lastHRQueryTime")
+        } else {
+            defaults.set((Int(Date().timeIntervalSince1970)), forKey: "lastHRQueryTime")
+            defaults.set("Yes", forKey: "isHRSet")
+            print("default set")
+            startDate = Date() - 24 * 60 * 60 // start date is 24hrs
+        }
+        //  Set the Predicates & Interval
+        let predicate: NSPredicate? = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: HKQueryOptions.strictEndDate)
+        let sampleQuery = HKSampleQuery(sampleType: HRVType!, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor]) { sampleQuery, results, error  in
+            if(error == nil) {
+                var count = 0
+                var resultStringData = ""
+                var resultStringTimestamps = ""
+                for result in (results as? [HKQuantitySample])! {
+                    let latestHeartRate = result.quantity.doubleValue(for: HKUnit(from: "count/min"))
+                    let formatter = ISO8601DateFormatter()
+                    formatter.formatOptions.insert(.withFractionalSeconds)
+                    if (count == 0) {
+                        resultStringData = String(round(latestHeartRate))
+                        resultStringTimestamps = formatter.string(from:(result.endDate))
+                    } else {
+                        resultStringData = resultStringData + ", " + String(latestHeartRate)
+                        resultStringTimestamps = resultStringTimestamps + ", " + formatter.string(from:(result.endDate))
+                    }
+                    
+                    count += 1
+                }
+                let date = Date()
+                let calendar = Calendar.current
+                let hour = calendar.component(.hour, from: date)
+                let minutes = calendar.component(.minute, from: date)
+                let day = calendar.component(.day, from: date)
+                let month = calendar.component(.month, from: date)
+                let year = calendar.component(.year, from: date)
+                if (minutes < 10) {
+                    self.defaults.set("\(month)-\(day)-\(year): \(hour):\(String(format: "%02d", minutes))", forKey: "lastQueryTime")
+                } else {
+                    self.defaults.set("\(month)-\(day)-\(year): \(hour):\(minutes)", forKey: "lastQueryTime")
+                }
+                
+                DispatchQueue.main.async {
+                    self.lastQueryTime = self.defaults.string(forKey: "lastQueryTime") ?? "Never Queried"
+                    self.HRDataPointsSent = count
+                }
+                if (count > 0) {
+                    self.sendDataToAWS(measurements: resultStringData, measurementType: "HeartRate", timestamps: resultStringTimestamps)
                 }
             }
         }
@@ -76,16 +157,13 @@ class HealthDataManager: NSObject, ObservableObject, WCSessionDelegate {
     }
     
     //Send data to IoT Endpoint
-    func sendDataToAWS(measurement: Double, measurementType: String) {
-        let date = Date()
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions.insert(.withFractionalSeconds)
+    func sendDataToAWS(measurements: String, measurementType: String, timestamps: String) {
         
         let data: [String: Any] = [
             "sensorId": self.deviceID,
             "measurementType": measurementType,
-            "measurement": String(measurement),
-            "timestamp": formatter.string(from:date)
+            "measurement": measurements,
+            "timestamp": timestamps
         ]
         
         let jsonDataString = dataToJson(from: data)
@@ -93,15 +171,5 @@ class HealthDataManager: NSObject, ObservableObject, WCSessionDelegate {
             print("Published : \(String(describing: jsonDataString))")
         }
         mqttClient.publishMessage(message: jsonDataString)
-    }
-    
-    func sessionDidBecomeInactive(_ session: WCSession) {
-            print("sessionDidBecomeInactive: \(session)")
-    }
-
-
-    func sessionDidDeactivate(_ session: WCSession) {
-        print("sessionDidDeactivate: \(session)")
-        self.session.activate()
     }
 }

@@ -4,25 +4,35 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var healthDataManager: HealthDataManager
     
-    
     var body: some View {
-        Text("Health Platform iOS")
+        
+        Text("IoT Status: \(healthDataManager.connectionStatus)")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
-            .padding()
             .onAppear() {
                 healthDataManager.setupSession()
             }
-        Text("Watch ID: \(healthDataManager.deviceID)")
+            .padding()
+        
+        Text("Device ID: \(healthDataManager.deviceID)")
             .padding()
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
         
-        Text("Heart Rate: \(healthDataManager.heartRate, specifier: "%.0f") bpm")
+        Text("Last Query Time: \(healthDataManager.lastQueryTime)")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
             .padding()
         
-        Text("Heart Rate Variability:\(healthDataManager.heartRateVariability, specifier: "%.0f") ms")
+        Text("HR Sent: \(healthDataManager.HRDataPointsSent) datapoints")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
             .padding()
+        
+        Text("HRV Sent: \(healthDataManager.HRVDataPointsSent) datapoints")
+            .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
+            .padding()
+        
+        Button("Query Data") {
+            healthDataManager.queryHeartRateData()
+            healthDataManager.queryHRVData()
+        }.font(Font.system(size: 40, weight: .regular, design: .default).monospacedDigit())
 
     }
 }

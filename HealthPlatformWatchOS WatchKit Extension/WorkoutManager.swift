@@ -9,23 +9,17 @@ import Foundation
 import HealthKit
 import Combine
 import WatchKit
-import WatchConnectivity
 
-class WorkoutManager: NSObject, ObservableObject, WCSessionDelegate {
+class WorkoutManager: NSObject, ObservableObject {
     
     /// - Tag: DeclareSessionBuilder
     let healthStore = HKHealthStore()
     var session: HKWorkoutSession!
     var builder: HKLiveWorkoutBuilder!
-    var watchSession = WCSession.default
     
     /// - Tag: Publishers
     @Published var heartrate: Double = 0
     @Published var elapsedSeconds: Int = 0
-    
-    @IBOutlet weak var labelX: WKInterfaceLabel!
-    @IBOutlet weak var labelY: WKInterfaceLabel!
-    @IBOutlet weak var labelZ: WKInterfaceLabel!
     
     // The app's workout state.
     var running: Bool = false
@@ -42,11 +36,7 @@ class WorkoutManager: NSObject, ObservableObject, WCSessionDelegate {
     var deviceIDFirst: String = ""
     var deviceIDSecond: String = ""
     var lastUpdateTime: Int = 0
-    
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        print("Activation State: \(activationState), Error: \(String(describing: error)))")
-    }
-    
+        
     // Set up and start the timer.
     func setUpTimer() {
         start = Date()
@@ -75,12 +65,7 @@ class WorkoutManager: NSObject, ObservableObject, WCSessionDelegate {
         deviceID = WKInterfaceDevice.current().identifierForVendor!.uuidString
         deviceIDFirst = deviceID.substring(to: deviceID.index(deviceID.startIndex, offsetBy: 19))
         deviceIDSecond = deviceID.substring(from: deviceID.index(deviceID.startIndex, offsetBy: 19))
-        
-        if WCSession.isSupported() {
-                watchSession.delegate = self
-                watchSession.activate()
-        }
-        
+
         log(logMessage: "setup finished")
         
         let typesToShare: Set = [
@@ -218,28 +203,12 @@ class WorkoutManager: NSObject, ObservableObject, WCSessionDelegate {
         return "watchOS " + String(os.majorVersion) + "." + String(os.minorVersion) + "." + String(os.patchVersion)
     }
     
-    func sendDataToPhone(HR: Double, HRV: Double) {
-        if (watchSession.isReachable) {
-            watchSession.sendMessage(["deviceID": clientID, "heartRate" : heartrate], replyHandler: nil) { (error) in
-                print("Error sending data: \(error.localizedDescription)")
-            }
-            print("SENT")
-        } else {
-            print("Iphone session not available")
-        }
-    }
-    
     // MARK: - Update the UI
     // Update the published values.
     func updateForStatistics(_ statistics: HKStatistics?) {
         guard let statistics = statistics else { return }
         let currentTime = Int(Date().timeIntervalSince1970)
         log(logMessage: String(currentTime))
-        if(currentTime > lastUpdateTime + 10){
-            lastUpdateTime = currentTime
-            //sendDataToPhone(HR: heartrate, HRV: heartRateVariability)
-            //queryHeartBeatData
-        }
 
         DispatchQueue.main.async {
             switch statistics.quantityType {
@@ -249,7 +218,6 @@ class WorkoutManager: NSObject, ObservableObject, WCSessionDelegate {
                 let value = statistics.mostRecentQuantity()?.doubleValue(for: heartRateUnit)
                 let roundedValue = Double( round( 1 * value! ) / 1 )
                 self.heartrate = roundedValue
-                self.sendDataToPhone(HR: self.heartrate, HRV: 0)
             case HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN):
                 return
             default:

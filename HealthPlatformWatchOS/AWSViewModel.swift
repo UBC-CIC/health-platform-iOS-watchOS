@@ -3,6 +3,7 @@ import Foundation
 import AWSIoT
 
 class AWSViewModel {
+    var connectionStatus = "Not Connected"
     let cognitoCredentials: AWSCognitoCredentialsProvider
     let cognitoConfiguration: AWSServiceConfiguration
     let iotEndpoint: AWSEndpoint
@@ -40,16 +41,22 @@ class AWSViewModel {
             func mqttEventCallback(_ status: AWSIoTMQTTStatus ) {
                 switch status {
                 case .connecting: print("Connecting to AWS IoT")
+                    connectionStatus = "Connecting"
                 case .connected:
                     print("Connected to AWS IoT")
-                    // Register subscriptions here
-                    // Publish a boot message if required
+                    connectionStatus = "Connected"
                 case .connectionError: print("AWS IoT connection error")
+                    connectionStatus = "Connection Error"
                 case .connectionRefused: print("AWS IoT connection refused")
+                    connectionStatus = "Connection Refused"
                 case .protocolError: print("AWS IoT protocol error")
+                    connectionStatus = "Protocol Error"
                 case .disconnected: print("AWS IoT disconnected")
+                    connectionStatus = "Disconnected"
                 case .unknown: print("AWS IoT unknown state")
+                    connectionStatus = "Unknown"
                 default: print("Error - unknown MQTT state")
+                    connectionStatus = "Not Connected"
                 }
             }
             

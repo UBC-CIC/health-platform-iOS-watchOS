@@ -16,15 +16,7 @@ struct WorkoutView: View {
             Text("\(elapsedTimeString(elapsed: secondsToHoursMinutesSeconds(seconds: workoutSession.elapsedSeconds)))").frame(alignment: .leading)
                 .font(Font.system(size: 20, weight: .semibold, design: .default).monospacedDigit())
             Spacer().frame(width: 1, height: 4, alignment: .leading)
-            
-             //The device id
-            Text("ID: \(workoutSession.deviceIDFirst)")
-            .font(Font.system(size: 10, weight: .regular, design: .default).monospacedDigit())
-            
-            Text("\(workoutSession.deviceIDSecond)")
-            .font(Font.system(size: 10, weight: .regular, design: .default).monospacedDigit())
-            Spacer().frame(width: 1, height: 4, alignment: .leading)
-                
+                      
             // The heart rate
             Text("HR: \(workoutSession.heartrate, specifier: "%.0f") bpm")
             .font(Font.system(size: 20, weight: .regular, design: .default).monospacedDigit())
