@@ -26,20 +26,6 @@ class HealthDataManager: NSObject, ObservableObject {
             self.lastQueryTime = self.defaults.string(forKey: "lastQueryTime") ?? "Never Queried"
         }
         updateConnectionStatus()
-        
-        let typesToShare: Set = [
-            HKQuantityType.workoutType()
-        ]
-        // The quantity types to read from the health store.
-        let typesToRead: Set = [
-            HKQuantityType.quantityType(forIdentifier: .heartRate)!,
-            HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!,
-        ]
-        
-        // Request authorization for those quantity types.
-        healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
-            // Handle error.
-        }
     }
     
     //Repeatedly check for connection status from the MQTT client
