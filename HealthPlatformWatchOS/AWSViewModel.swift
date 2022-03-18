@@ -40,23 +40,14 @@ class AWSViewModel {
     func connectToAWSIoT() {
             func mqttEventCallback(_ status: AWSIoTMQTTStatus ) {
                 switch status {
-                case .connecting: print("Connecting to AWS IoT")
-                    connectionStatus = "Connecting"
-                case .connected:
-                    print("Connected to AWS IoT")
-                    connectionStatus = "Connected"
-                case .connectionError: print("AWS IoT connection error")
-                    connectionStatus = "Connection Error"
-                case .connectionRefused: print("AWS IoT connection refused")
-                    connectionStatus = "Connection Refused"
-                case .protocolError: print("AWS IoT protocol error")
-                    connectionStatus = "Protocol Error"
-                case .disconnected: print("AWS IoT disconnected")
-                    connectionStatus = "Disconnected"
-                case .unknown: print("AWS IoT unknown state")
-                    connectionStatus = "Unknown"
-                default: print("Error - unknown MQTT state")
-                    connectionStatus = "Not Connected"
+                case .connecting: connectionStatus = "Connecting"
+                case .connected: connectionStatus = "Connected"
+                case .connectionError: connectionStatus = "Connection Error"
+                case .connectionRefused: connectionStatus = "Connection Refused"
+                case .protocolError: connectionStatus = "Protocol Error"
+                case .disconnected: connectionStatus = "Disconnected"
+                case .unknown: connectionStatus = "Unknown"
+                default: connectionStatus = "Not Connected"
                 }
             }
             

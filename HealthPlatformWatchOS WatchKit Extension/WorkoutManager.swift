@@ -29,12 +29,6 @@ class WorkoutManager: NSObject, ObservableObject {
     var start: Date = Date()
     var cancellable: Cancellable?
     var accumulatedTime: Int = 0
-    
-    let userDefaults = UserDefaults()
-    var clientID: String?
-    var deviceID: String = ""
-    var deviceIDFirst: String = ""
-    var deviceIDSecond: String = ""
     var lastUpdateTime: Int = 0
         
     // Set up and start the timer.
@@ -57,17 +51,6 @@ class WorkoutManager: NSObject, ObservableObject {
 
     // Request authorization to access HealthKit and start the watch session
     func requestAuthorization() {
-        clientID = userDefaults.string(forKey: "deviceID")
-        if(clientID == nil){
-            clientID = WKInterfaceDevice.current().identifierForVendor?.uuidString
-            userDefaults.set(clientID, forKey: "deviceID")
-        }
-        deviceID = WKInterfaceDevice.current().identifierForVendor!.uuidString
-        deviceIDFirst = deviceID.substring(to: deviceID.index(deviceID.startIndex, offsetBy: 19))
-        deviceIDSecond = deviceID.substring(from: deviceID.index(deviceID.startIndex, offsetBy: 19))
-
-        log(logMessage: "setup finished")
-        
         let typesToShare: Set = [
             HKQuantityType.workoutType()
         ]
@@ -76,13 +59,13 @@ class WorkoutManager: NSObject, ObservableObject {
         let typesToRead: Set = [
             HKQuantityType.quantityType(forIdentifier: .heartRate)!,
             HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!,
-            HKSeriesType.heartbeat(),
         ]
         
         // Request authorization for those quantity types.
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
             // Handle error.
         }
+        log(logMessage: "setup finished")
     }
 
     
@@ -90,26 +73,11 @@ class WorkoutManager: NSObject, ObservableObject {
     func workoutConfiguration() -> HKWorkoutConfiguration {
         /// - Tag: WorkoutConfiguration
         let configuration = HKWorkoutConfiguration()
-        configuration.activityType = .running
-        configuration.locationType = .outdoor
+        configuration.activityType = .walking
+        configuration.locationType = .indoor
         
         return configuration
     }
-    
-    func queryHeartBeatData() {
-        let timeframe = HKQuery.predicateForSamples(withStart: Date().addingTimeInterval(-60 * 60 * 24), end: Date(), options: [])
-        let heartbeatSeriesSampleQuery = HKSampleQuery(sampleType: HKSeriesType.heartbeat(), predicate: timeframe, limit: 20, sortDescriptors: nil) { (sampleQuery, samples, error) in
-            if let heartbeatSeriesSample = samples?.first as? HKHeartbeatSeriesSample {
-                let query = HKHeartbeatSeriesQuery(heartbeatSeries: heartbeatSeriesSample) { (query, timeSinceSeriesStart, precededByGap, done, error) in
-                    print(timeSinceSeriesStart)
-                }
-                self.healthStore.execute(query)
-            } else {
-                print("ERROR")
-            }
-        }
-        healthStore.execute(heartbeatSeriesSampleQuery)
-}
     
     // Start the workout.
     func startWorkout() {
@@ -186,22 +154,6 @@ class WorkoutManager: NSObject, ObservableObject {
             self.heartrate = 0
         }
     }
-
-    func getISOString() -> String {
-        let dateFormatter = DateFormatter()
-        let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.locale = enUSPosixLocale
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.sss"
-        dateFormatter.calendar = Calendar(identifier: .gregorian)
-        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
-        let iso8601String = dateFormatter.string(from: Date()) + "Z"
-        return iso8601String
-    }
-    
-    func getOSVersion() -> String {
-        let os = ProcessInfo().operatingSystemVersion
-        return "watchOS " + String(os.majorVersion) + "." + String(os.minorVersion) + "." + String(os.patchVersion)
-    }
     
     // MARK: - Update the UI
     // Update the published values.
@@ -218,8 +170,6 @@ class WorkoutManager: NSObject, ObservableObject {
                 let value = statistics.mostRecentQuantity()?.doubleValue(for: heartRateUnit)
                 let roundedValue = Double( round( 1 * value! ) / 1 )
                 self.heartrate = roundedValue
-            case HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN):
-                return
             default:
                 return
             }

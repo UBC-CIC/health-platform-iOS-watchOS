@@ -19,7 +19,7 @@ class HealthDataManager: NSObject, ObservableObject {
     //Timer for updating IoT connection status
     var timer = Timer()
     
-    //Set deviceID, lastQueryTime from defaults, set connection status, and request HealthKit authorization.
+    //Set deviceID, lastQueryTime from defaults, and set connection status.
     func setupSession() {
         DispatchQueue.main.async {
             self.deviceID = UIDevice.current.identifierForVendor!.uuidString

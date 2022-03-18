@@ -17,7 +17,7 @@ struct ContentView: View {
             .padding()
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
         
-        Text("Last Query Time: \(healthDataManager.lastQueryTime)")
+        Text("Last Send Time: \(healthDataManager.lastQueryTime)")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
             .padding()
         
@@ -29,11 +29,23 @@ struct ContentView: View {
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
             .padding()
         
-        Button("Query Data") {
+        Button("Send Data") {
             healthDataManager.queryHeartRateData()
             healthDataManager.queryHRVData()
-        }.font(Font.system(size: 40, weight: .regular, design: .default).monospacedDigit())
+        }.buttonStyle(GrowingButton())
+            .font(Font.system(size: 40, weight: .regular, design: .default).monospacedDigit())
+    }
+}
 
+struct GrowingButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .clipShape(Capsule())
+            .scaleEffect(configuration.isPressed ? 1.2 : 1)
+            .animation(.easeOut(duration: 0.2), value: configuration.isPressed)
     }
 }
 
