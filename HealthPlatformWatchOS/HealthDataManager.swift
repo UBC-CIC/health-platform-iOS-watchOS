@@ -2,16 +2,17 @@
 import Foundation
 import HealthKit
 import UIKit
+import BackgroundTasks
 
 class HealthDataManager: NSObject, ObservableObject {
     //Published variables which are updated in the UI
-    @Published var deviceID = "N/A"
+    @Published var deviceID = UIDevice.current.identifierForVendor!.uuidString
     @Published var connectionStatus = "Not Connected"
     @Published var lastQueryTime = ""
     @Published var HRDataPointsSent = 0
     @Published var HRVDataPointsSent = 0
     //Initialize the MQTT client
-    let mqttClient = AWSViewModel()
+    var mqttClient = AWSViewModel()
     //Initialize HealthKit Store
     let healthStore = HKHealthStore()
     //For storing user information required for next app launch
@@ -22,7 +23,6 @@ class HealthDataManager: NSObject, ObservableObject {
     //Set deviceID, lastQueryTime from defaults, and set connection status.
     func setupSession() {
         DispatchQueue.main.async {
-            self.deviceID = UIDevice.current.identifierForVendor!.uuidString
             self.lastQueryTime = self.defaults.string(forKey: "lastQueryTime") ?? "Never Queried"
         }
         updateConnectionStatus()

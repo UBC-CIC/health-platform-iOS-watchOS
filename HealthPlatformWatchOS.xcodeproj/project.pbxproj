@@ -29,6 +29,7 @@
 		E92FCC9827CFFD870020E407 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92FCC8F27CFFD870020E407 /* WorkoutManager.swift */; };
 		E92FCC9927CFFD870020E407 /* WorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92FCC9027CFFD870020E407 /* WorkoutView.swift */; };
 		E92FCC9D27D001C20020E407 /* HealthDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92FCC9C27D001C20020E407 /* HealthDataManager.swift */; };
+		E9E22B3727EA50EA00C1EB40 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E22B3627EA50EA00C1EB40 /* AppDelegate.swift */; };
 		E9FC4CA427D02C1D00843A96 /* AWSViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FC4CA327D02C1D00843A96 /* AWSViewModel.swift */; };
 		E9FC4CA627D0495C00843A96 /* AWSConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FC4CA527D0495C00843A96 /* AWSConstants.swift */; };
 		F0E0D05B5CDD99D9E219B635 /* Pods_HealthPlatformWatchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52577BF3F7DCF8AF0231693F /* Pods_HealthPlatformWatchOS.framework */; };
@@ -106,6 +107,8 @@
 		E92FCC8F27CFFD870020E407 /* WorkoutManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
 		E92FCC9027CFFD870020E407 /* WorkoutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutView.swift; sourceTree = "<group>"; };
 		E92FCC9C27D001C20020E407 /* HealthDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataManager.swift; sourceTree = "<group>"; };
+		E976FD3A27E9244A00133411 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E9E22B3627EA50EA00C1EB40 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9FC4CA327D02C1D00843A96 /* AWSViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSViewModel.swift; sourceTree = "<group>"; };
 		E9FC4CA527D0495C00843A96 /* AWSConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSConstants.swift; sourceTree = "<group>"; };
 		E9FC4CA727D15B8500843A96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -167,12 +170,14 @@
 		E92FCC4C27CFFC440020E407 /* HealthPlatformWatchOS */ = {
 			isa = PBXGroup;
 			children = (
+				E976FD3A27E9244A00133411 /* Info.plist */,
 				E92FCC8527CFFCB60020E407 /* HealthPlatformWatchOS.entitlements */,
 				E92FCC4D27CFFC440020E407 /* HealthPlatformWatchOSApp.swift */,
 				E92FCC4F27CFFC440020E407 /* ContentView.swift */,
 				E92FCC9C27D001C20020E407 /* HealthDataManager.swift */,
 				E9FC4CA327D02C1D00843A96 /* AWSViewModel.swift */,
 				E9FC4CA527D0495C00843A96 /* AWSConstants.swift */,
+				E9E22B3627EA50EA00C1EB40 /* AppDelegate.swift */,
 				E92FCC5127CFFC450020E407 /* Assets.xcassets */,
 				E92FCC5327CFFC450020E407 /* Preview Content */,
 			);
@@ -409,6 +414,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9E22B3727EA50EA00C1EB40 /* AppDelegate.swift in Sources */,
 				E9FC4CA427D02C1D00843A96 /* AWSViewModel.swift in Sources */,
 				E92FCC5027CFFC440020E407 /* ContentView.swift in Sources */,
 				E92FCC4E27CFFC440020E407 /* HealthPlatformWatchOSApp.swift in Sources */,
@@ -702,6 +708,7 @@
 				DEVELOPMENT_TEAM = S7UT69S57L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HealthPlatformWatchOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -735,6 +742,7 @@
 				DEVELOPMENT_TEAM = S7UT69S57L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HealthPlatformWatchOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

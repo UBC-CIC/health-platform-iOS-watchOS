@@ -42,12 +42,25 @@ class AWSViewModel {
                 switch status {
                 case .connecting: connectionStatus = "Connecting"
                 case .connected: connectionStatus = "Connected"
+                    print("Connected")
                 case .connectionError: connectionStatus = "Connection Error"
+                    print("error")
+//                    let seconds = 5.0
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+//                        self.connectToAWSIoT()
+//                    }
                 case .connectionRefused: connectionStatus = "Connection Refused"
+                    print("refused")
+                    connectToAWSIoT()
                 case .protocolError: connectionStatus = "Protocol Error"
+                    print("protocol")
+                    connectToAWSIoT()
                 case .disconnected: connectionStatus = "Disconnected"
+                    print("disconnected")
+                    connectToAWSIoT()
                 case .unknown: connectionStatus = "Unknown"
                 default: connectionStatus = "Not Connected"
+                    
                 }
             }
             
@@ -57,7 +70,7 @@ class AWSViewModel {
                     print("Attempting to connect to IoT device gateway with ID = \(self.clientId)")
                     let dataManager = AWSIoTDataManager(forKey: "kDataManager")
                     dataManager.connectUsingWebSocket(withClientId: self.clientId,
-                                                      cleanSession: true,
+                                                      cleanSession: false,
                                                       statusCallback: mqttEventCallback)
                 } catch {
                     print("Error, failed to connect to device gateway => \(error)")
