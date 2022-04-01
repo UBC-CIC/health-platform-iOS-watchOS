@@ -5,60 +5,38 @@ import BackgroundTasks
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     var healthDataManager = HealthDataManager()
+    
+    //Lock application orientation in portrait mode
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask(rawValue: UIInterfaceOrientationMask.portrait.rawValue)
+    }
+    
+    //Set the minimum background fetch interval in seconds. This interval is not an exact time interval of when each background fetch will be run. Setting the interval states that a background fetch will happen AT MOST once per X seconds, Apple determines the actual runtimes.
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+        application.setMinimumBackgroundFetchInterval(3600)
         return true
     }
 
+    //Execute HealthKit Query and send to IoT synchonously on the background thread after verifying there is a connection to IoT. If this cannot be completed within the seconds specified by connectionTimeoutLimit, the background fetch will fail.
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        var backgroundTask = UIBackgroundTaskIdentifier.invalid
-        backgroundTask = application.beginBackgroundTask(withName: "SendData") {
+        DispatchQueue.global(qos: .background).sync {
             if (self.healthDataManager.connectionStatus != "Connected") {
-                print(self.healthDataManager.connectionStatus)
                 self.healthDataManager.mqttClient = AWSViewModel()
             }
+            var connectionTimeoutCount = 0
+            let connectionTimeoutLimit = 25 //Hard limit for a background fetch is 30s
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { (timer) in
+                connectionTimeoutCount += 1
                 if self.healthDataManager.connectionStatus == "Connected" {
-                    print("yes")
                     self.healthDataManager.queryHeartRateData()
                     self.healthDataManager.queryHRVData()
                     completionHandler(.newData)
                     timer.invalidate()
+                } else if (connectionTimeoutCount == connectionTimeoutLimit) {
+                    self.healthDataManager.yes()
+                    completionHandler(.failed)
                 }
             }
-            application.endBackgroundTask(backgroundTask)
-            backgroundTask = UIBackgroundTaskIdentifier.invalid
         }
     }
-    //        let seconds = 5.0
-    //        DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
-    //
-    //        }
-    
-    //    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    //        BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.UBC-CIC.HealthPlatformWatchOS.HealthDataManager.QueryHeartRateData", using: nil) { task in
-    //            self.handleAppRefresh(task: task as! BGAppRefreshTask)
-    //        }
-    //    }
-    //
-    //    func scheduleAppRefresh() {
-    //       let request = BGAppRefreshTaskRequest(identifier: "com.UBC-CIC.HealthPlatformWatchOS.HealthDataManager.QueryHeartRateData")
-    //       request.earliestBeginDate = Date(timeIntervalSinceNow: 60)
-    //
-    //       do {
-    //          try BGTaskScheduler.shared.submit(request)
-    //       } catch {
-    //          print("Could not schedule app refresh: \(error)")
-    //       }
-    //    }
-    //
-    //    func handleAppRefresh(task: BGAppRefreshTask) {
-    //        task.expirationHandler = {
-    //            task.setTaskCompleted(success: false)
-    //        }
-    //        print(Int.random(in: 0..<100))
-    //        task.setTaskCompleted(success: true)
-    //       // Schedule a new refresh task.
-    //       scheduleAppRefresh()
-    //     }
 }

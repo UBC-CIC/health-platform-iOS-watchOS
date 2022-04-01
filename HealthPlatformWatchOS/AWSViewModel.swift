@@ -45,10 +45,6 @@ class AWSViewModel {
                     print("Connected")
                 case .connectionError: connectionStatus = "Connection Error"
                     print("error")
-//                    let seconds = 5.0
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
-//                        self.connectToAWSIoT()
-//                    }
                 case .connectionRefused: connectionStatus = "Connection Refused"
                     print("refused")
                     connectToAWSIoT()
@@ -70,7 +66,7 @@ class AWSViewModel {
                     print("Attempting to connect to IoT device gateway with ID = \(self.clientId)")
                     let dataManager = AWSIoTDataManager(forKey: "kDataManager")
                     dataManager.connectUsingWebSocket(withClientId: self.clientId,
-                                                      cleanSession: false,
+                                                      cleanSession: true,
                                                       statusCallback: mqttEventCallback)
                 } catch {
                     print("Error, failed to connect to device gateway => \(error)")
