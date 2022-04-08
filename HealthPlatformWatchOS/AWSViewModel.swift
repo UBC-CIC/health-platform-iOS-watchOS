@@ -66,7 +66,7 @@ class AWSViewModel {
                     print("Attempting to connect to IoT device gateway with ID = \(self.clientId)")
                     let dataManager = AWSIoTDataManager(forKey: "kDataManager")
                     dataManager.connectUsingWebSocket(withClientId: self.clientId,
-                                                      cleanSession: true,
+                                                      cleanSession: false,
                                                       statusCallback: mqttEventCallback)
                 } catch {
                     print("Error, failed to connect to device gateway => \(error)")
