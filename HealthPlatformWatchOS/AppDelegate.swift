@@ -2,7 +2,7 @@
 import UIKit
 import BackgroundTasks
 
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: NSObject, UIApplicationDelegate {
     var healthDataManager = HealthDataManager()
     
 //    Lock application orientation in portrait mode
@@ -11,7 +11,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        BGTaskScheduler.shared.cancelAllTaskRequests()
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.UBCCIC.queryData",
           using: nil) { (task) in
             self.handleAppRefreshTask(task: task as! BGAppRefreshTask)
@@ -24,16 +23,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         task.expirationHandler = {
             DispatchQueue.global(qos: .background).sync {
                 task.setTaskCompleted(success: false)
-                self.scheduleBackgroundDataSend()
             }
         }
         DispatchQueue.global(qos: .background).sync {
-            self.scheduleBackgroundDataSend()
+            scheduleBackgroundDataSend()
+            if (healthDataManager.connectionStatus != "Connected") {
+                healthDataManager.mqttClient.connectToAWSIoT()
+            }
             while (healthDataManager.connectionStatus != "Connected") {
                 //wait for a connection, timeout is after 30s when the expiration handler will be called
             }
-            self.healthDataManager.queryHeartRateData()
-            self.healthDataManager.queryHRVData()
+            healthDataManager.queryHeartRateData()
+            healthDataManager.queryHRVData()
             task.setTaskCompleted(success: true)
         }
     }
