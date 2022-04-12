@@ -54,7 +54,7 @@ After you have set the AWS Constants, relaunch the app and the IoT status should
 
 - Send Data: Sends all datapoints from your last send time to now to AWS. Ensure the IoT Status says connected before sending the data.
 
-You can also leave your app in the background where it will periodically send data automatically. However, this is unpredictabe as Apple has an algorithm which determines when this will happen which may take a long time before triggering. Therefore, it is best to trigger data sends with the button in the app if you can. The automatic data send will not work if you force quit/terminate your app.
+You can also leave your app in the background where it will periodically send data automatically. However, this is unpredictable as Apple has an algorithm which determines when this will happen which may take a long time before triggering. Therefore, it is best to trigger data sends with the button in the app if you can. The automatic data send will not work if you force quit/terminate your app.
 
 ### WatchOS App Overview
 
