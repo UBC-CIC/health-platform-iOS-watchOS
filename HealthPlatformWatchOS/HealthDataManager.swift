@@ -10,6 +10,7 @@ class HealthDataManager: NSObject, ObservableObject {
     @Published var lastQueryTime = ""
     @Published var HRDataPointsSent = 0
     @Published var HRVDataPointsSent = 0
+    @Published var remainingBGTasks = 0
     //Initialize the MQTT client
     var mqttClient = AWSViewModel()
     //Initialize HealthKit Store
@@ -38,13 +39,18 @@ class HealthDataManager: NSObject, ObservableObject {
     //Repeatedly check for connection status from the MQTT client
     func updateConnectionStatus() {
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
-                DispatchQueue.main.async {
-                    self.connectionStatus = self.mqttClient.connectionStatus
-                
+            DispatchQueue.main.async {
+                self.connectionStatus = self.mqttClient.connectionStatus
             }
         })
     }
-
+    
+    func checkRemainingBackgroundTasks(tasks: Int) {
+        DispatchQueue.main.async {
+            self.remainingBGTasks = tasks
+        }
+    }
+    
     //Query from HealthKit the latest HRV values since the last query, default query is from the first time you open the app
     func queryHRVData(){
         let HRVType = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)

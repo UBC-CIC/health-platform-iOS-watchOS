@@ -26,6 +26,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         task.expirationHandler = {
             DispatchQueue.global(qos: .background).sync {
                 task.setTaskCompleted(success: false)
+                BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
+                    self.healthDataManager.checkRemainingBackgroundTasks(tasks: tasks.count)
+                    print("Tasks", tasks.count, tasks);
+                })
             }
         }
         DispatchQueue.global(qos: .background).sync {
@@ -47,6 +51,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 healthDataManager.queryHRVData()
                 task.setTaskCompleted(success: true)
             }
+            BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
+                self.healthDataManager.checkRemainingBackgroundTasks(tasks: tasks.count)
+                print("Tasks", tasks.count, tasks);
+            })
         }
     }
     
@@ -58,6 +66,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             queryTask.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 60)
             do {
                 try BGTaskScheduler.shared.submit(queryTask)
+                BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
+                    self.healthDataManager.checkRemainingBackgroundTasks(tasks: tasks.count)
+                    print("Tasks", tasks.count, tasks);
+                })
             } catch {
                 print("Unable to submit task: \(error.localizedDescription)")
             }

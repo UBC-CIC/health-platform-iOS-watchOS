@@ -29,11 +29,16 @@ struct ContentView: View {
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
             .padding()
         
+        //For testing purposes only, will be removed later
+        Text("BGTasks: \(healthDataManager.remainingBGTasks) remaining")
+            .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
+            .padding()
+        
         Button("Send Data") {
             healthDataManager.queryHeartRateData()
             healthDataManager.queryHRVData()
         }.buttonStyle(GrowingButton())
-            .font(Font.system(size: 40, weight: .regular, design: .default).monospacedDigit())
+            .font(Font.system(size: 30, weight: .regular, design: .default).monospacedDigit())
     }
 }
 
