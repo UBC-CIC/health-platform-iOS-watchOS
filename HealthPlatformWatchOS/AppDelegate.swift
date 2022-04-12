@@ -30,12 +30,20 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             if (healthDataManager.connectionStatus != "Connected") {
                 healthDataManager.mqttClient.connectToAWSIoT()
             }
+            let connectionTimeoutLimit = Date().timeIntervalSince1970 + 28
+            var connectionTimeoutLimitReached = false
             while (healthDataManager.connectionStatus != "Connected") {
-                //wait for a connection, timeout is after 30s when the expiration handler will be called
+                if (Date().timeIntervalSince1970 >= connectionTimeoutLimit) {
+                    connectionTimeoutLimitReached = true
+                    task.setTaskCompleted(success: false)
+                    break
+                }
             }
-            healthDataManager.queryHeartRateData()
-            healthDataManager.queryHRVData()
-            task.setTaskCompleted(success: true)
+            if (connectionTimeoutLimitReached == false) {
+                healthDataManager.queryHeartRateData()
+                healthDataManager.queryHRVData()
+                task.setTaskCompleted(success: true)
+            }
         }
     }
     
