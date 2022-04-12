@@ -2,7 +2,6 @@
 import Foundation
 import HealthKit
 import UIKit
-import BackgroundTasks
 
 class HealthDataManager: NSObject, ObservableObject {
     //Published variables which are updated in the UI
@@ -20,8 +19,16 @@ class HealthDataManager: NSObject, ObservableObject {
     //Timer for updating IoT connection status
     var timer = Timer()
     
-    //Set deviceID, lastQueryTime from defaults, and set connection status.
+    //Set deviceID, query time defaults, and set connection status.
     func setupSession() {
+        if defaults.string(forKey: "isHRSet") == nil {
+            defaults.set((Int(Date().timeIntervalSince1970)), forKey: "lastHRQueryTime")
+            defaults.set("Yes", forKey: "isHRSet")
+        }
+        if defaults.string(forKey: "isHRVSet") == nil {
+            defaults.set((Int(Date().timeIntervalSince1970)), forKey: "lastHRVQueryTime")
+            defaults.set("Yes", forKey: "isHRVSet")
+        }
         DispatchQueue.main.async {
             self.lastQueryTime = self.defaults.string(forKey: "lastQueryTime") ?? "Never Queried"
         }
@@ -38,25 +45,18 @@ class HealthDataManager: NSObject, ObservableObject {
         })
     }
 
-    //Query from HealthKit the latest HRV values since the last query, default query is from the last 24hrs.
+    //Query from HealthKit the latest HRV values since the last query, default query is from the first time you open the app
     func queryHRVData(){
         let HRVType = HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)
 
         let sortDescriptor = NSSortDescriptor(key:HKSampleSortIdentifierStartDate, ascending: false)
-        //Get unrecorded time from from current query time minus the last query time, and set record new times in user defulats
+        //Get unrecorded time from from current query time minus the last query time, and set record new times in user defaults
         var startDate: Date
-        if defaults.string(forKey: "isHRVSet") != nil {
-            let lastQueryTime = defaults.integer(forKey: "lastHRVQueryTime")
-            defaults.set(Int(Date().timeIntervalSince1970), forKey: "currentHRVQueryTime")
-            let timeDifference = Double(defaults.integer(forKey: "currentHRVQueryTime") - lastQueryTime)
-            startDate = Date() - timeDifference
-            defaults.set(Int(Date().timeIntervalSince1970), forKey: "lastHRVQueryTime")
-        } else {
-            defaults.set((Int(Date().timeIntervalSince1970)), forKey: "lastHRVQueryTime")
-            defaults.set("Yes", forKey: "isHRVSet")
-            print("default set")
-            startDate = Date() - 24 * 60 * 60 // start date is 24hrs
-        }
+        let lastQueryTime = defaults.integer(forKey: "lastHRVQueryTime")
+        let currentTime  = (Int)(Date().timeIntervalSince1970)
+        let timeDifference = Double(currentTime - lastQueryTime)
+        startDate = Date() - timeDifference
+        defaults.set(currentTime, forKey: "lastHRVQueryTime")
         
         //  Set the Predicates & Interval
         let predicate: NSPredicate? = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: HKQueryOptions.strictEndDate)
@@ -90,26 +90,19 @@ class HealthDataManager: NSObject, ObservableObject {
         healthStore.execute(sampleQuery)
     }
     
-    //Query from HealthKit the latest Heart Rate values since the last query, default query is from the last 24hrs.
+    //Query from HealthKit the latest Heart Rate values since the last query, default query is from the first time you open the app
     func queryHeartRateData() {
         let HRVType = HKQuantityType.quantityType(forIdentifier: .heartRate)
 
         let sortDescriptor = NSSortDescriptor(key:HKSampleSortIdentifierStartDate, ascending: false)
-        //Get unrecorded time from from current query time minus the last query time, and set record new times in user defulats
+        //Get unrecorded time from from current query time minus the last query time, and set record new times in user defaults
         var startDate: Date
-        if defaults.string(forKey: "isHRSet") != nil {
-            let lastQueryTime = defaults.integer(forKey: "lastHRQueryTime")
-            print(lastQueryTime)
-            defaults.set(Int(Date().timeIntervalSince1970), forKey: "currentHRQueryTime")
-            let timeDifference = Double(defaults.integer(forKey: "currentHRQueryTime") - lastQueryTime)
-            startDate = Date() - timeDifference
-            defaults.set(Int(Date().timeIntervalSince1970), forKey: "lastHRQueryTime")
-        } else {
-            defaults.set((Int(Date().timeIntervalSince1970)), forKey: "lastHRQueryTime")
-            defaults.set("Yes", forKey: "isHRSet")
-            print("default set")
-            startDate = Date() - 24 * 60 * 60 // start date is 24hrs
-        }
+        let lastQueryTime = defaults.integer(forKey: "lastHRQueryTime")
+        let currentTime  = (Int)(Date().timeIntervalSince1970)
+        let timeDifference = Double(currentTime - lastQueryTime)
+        startDate = Date() - timeDifference
+        defaults.set(currentTime, forKey: "lastHRQueryTime")
+        
         //  Set the Predicates & Interval
         let predicate: NSPredicate? = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: HKQueryOptions.strictEndDate)
         let sampleQuery = HKSampleQuery(sampleType: HRVType!, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor]) { sampleQuery, results, error  in

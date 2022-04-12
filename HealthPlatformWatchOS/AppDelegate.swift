@@ -5,11 +5,12 @@ import BackgroundTasks
 class AppDelegate: NSObject, UIApplicationDelegate {
     var healthDataManager = HealthDataManager()
     
-//    Lock application orientation in portrait mode
+    //Lock application orientation in portrait mode
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return UIInterfaceOrientationMask(rawValue: UIInterfaceOrientationMask.portrait.rawValue)
     }
     
+    //Register the background refresh task and schedule task
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.UBCCIC.queryData",
           using: nil) { (task) in
@@ -19,7 +20,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         return true
     }
     
+    //Code to be executed when a background refresh is triggered
     func handleAppRefreshTask(task: BGAppRefreshTask) {
+        //Triggers when the app refresh reaches 30 seconds of runtime
         task.expirationHandler = {
             DispatchQueue.global(qos: .background).sync {
                 task.setTaskCompleted(success: false)
@@ -30,7 +33,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             if (healthDataManager.connectionStatus != "Connected") {
                 healthDataManager.mqttClient.connectToAWSIoT()
             }
-            let connectionTimeoutLimit = Date().timeIntervalSince1970 + 28
+            let connectionTimeoutLimit = Date().timeIntervalSince1970 + 28 //hard limit is a 30s
             var connectionTimeoutLimitReached = false
             while (healthDataManager.connectionStatus != "Connected") {
                 if (Date().timeIntervalSince1970 >= connectionTimeoutLimit) {
@@ -47,9 +50,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
     }
     
+    //Schedules the background app refresh
     func scheduleBackgroundDataSend() {
         DispatchQueue.global(qos: .background).sync {
             let queryTask = BGAppRefreshTaskRequest(identifier: "com.UBCCIC.queryData")
+            //Set the minimum background fetch interval in seconds. This interval is not an exact time interval of when each background fetch will be run. Setting the interval states that a background fetch will happen AT MOST once per X seconds, Apple has its own algorithm for scheduling the actual runtimes.
             queryTask.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 60)
             do {
                 try BGTaskScheduler.shared.submit(queryTask)
@@ -59,6 +64,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
     }
     
+    //Cancel all task requests when the app is force quit
     func applicationWillTerminate(_ application: UIApplication) {
         BGTaskScheduler.shared.cancelAllTaskRequests()
     }

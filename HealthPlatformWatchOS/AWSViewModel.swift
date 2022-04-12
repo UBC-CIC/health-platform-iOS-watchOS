@@ -27,7 +27,7 @@ class AWSViewModel {
             cognitoCredentials.getIdentityId().continueWith(block: { (task:AWSTask<NSString>) -> Any? in
                 if let error = task.error as NSError? {
                     print("Failed to get client ID => \(error)")
-                    return nil  // Required by AWSTask closure
+                    return nil  
                 }
                 
                 self.clientId = task.result! as String
@@ -68,8 +68,6 @@ class AWSViewModel {
                     dataManager.connectUsingWebSocket(withClientId: self.clientId,
                                                       cleanSession: false,
                                                       statusCallback: mqttEventCallback)
-                } catch {
-                    print("Error, failed to connect to device gateway => \(error)")
                 }
             }
         }

@@ -3,6 +3,7 @@ import Foundation
 
 struct AWSConstants {
     //User defined constants, ensure that you are using the AWS console in us-west-2
+    //Input the cognito pool id and IoT endpoint by opening the settings app and navigating to this app
     
     //Cognito -> Manage Identity Pools -> HealthPlatformIdentityPool -> Edit Identity Pool -> Identity pool ID
     static let COGNITO_POOL_ID = (UserDefaults.standard.string(forKey: "cognito_id") ?? "") as String
