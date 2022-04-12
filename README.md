@@ -36,7 +36,7 @@ After the iOS app has launched for the first time, quit the app and go to the se
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/App%20Settings%202.png" width="200"/>
 </p>
 
-After you have set the AWS Constants, relaunch the app and the IoT status should say Connected. If this is not the case, check that you are connected to WiFi, and also that you entered your endpoint and Cognito Pool Id correctly.
+After you have set the AWS Constants, relaunch the app and the IoT status should say Connected. If this is not the case, check that you are connected to WiFi, and also that you entered your IoT Endpoint and Cognito Pool ID correctly.
 
 ### iOS app overview
 
@@ -44,7 +44,7 @@ After you have set the AWS Constants, relaunch the app and the IoT status should
 
 - IoT Status: Shows if you are connected to AWS IoT. If you background the app it will disconnect and when you tab back into the app, it will say Connection Error. Give it some time, and the app will reconnect itself.
 
-- Device ID: A unique ID given to your iPhone. Use this to register your device in the frontend.
+- Device ID: A unique ID given to your iPhone. Use this to register your device in the frontend.
 
 - Last Send Time: This shows the last time you sent data to AWS.
 
