@@ -6,13 +6,13 @@
 
 Start by going to Xcode -> Preferences -> Accounts and adding your Apple ID with the plus sign in the bottom right corner
 
-![alt text](README Images/Xcode Accounts.png)
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Xcode%20Accounts.png"/>
 
 Sign up for a Apple developer account with your Apple ID if you don't have one already [here](https://developer.apple.com/account/#!/welcome).
 
 Under HealthPlatformWatchOS -> Signing, change the team to your Apple account. It should say Your Name (Personal Team - youremail@email.com) Do this for each of the 3 targets in the targets sidebar.
 
-![alt text](README Images/Signing.png)
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Signing.png"/>
 
 ### Deploying to your device
 
@@ -22,19 +22,25 @@ At the top of the screen select your iPhone from the list and then click the pla
 
 The Apple Watch app may take a couple minutes to attach to your watch.
 
-![alt text](README Images/Run App 1.png) ![alt text](README Images/Run App 2.png)
+<p float="left">
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Run%20App%201.png"/>
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Run%20App%202.png"/>
+</p>
 
 ### Setting up the iOS app
 
 After the iOS app has launched for the first time, quit the app and go to the settings app. Navigate to HealthPlatformWatchOS and fill in the IoT Endpoint and Cognito Pool ID. Also ensure that the Background App Refresh setting is enabled.
 
-![alt text](README Images/App Settings 1.png) ![alt text](README Images/App Settings 2.png)
+<p float="left">
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/App%20Settings%201.png"/>
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/App%20Settings%202.png"/>
+</p>
 
 After you have set the AWS Constants, relaunch the app and the IoT status should say Connected. If this is not the case, check that you are connected to WiFi, and also that you entered your endpoint and Cognito Pool Id correctly.
 
 ### iOS app overview
 
-![alt text](README Images/iOS App.png)
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/iOS%20App.png"/>
 
 - IoT Status: Shows if you are connected to AWS IoT. If you background the app it will disconnect and when you tab back into the app, it will say Connection Error. Give it some time, and the app will reconnect itself.
 
@@ -52,7 +58,11 @@ You can also leave your app in the background where it will periodically send da
 
 ### WatchOS App Overview
 
-![alt text](README Images/Run Button.png) ![alt text](README Images/Watch App.png) ![alt text](README Images/Stop Pause.png)
+<p float="left">
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Run%20Button.png"  width="200"/>
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Watch%20App.png"  width="200"/>
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Stop%20Pause.png"  width="200"/>
+</p>
 
 - Run Button: Tap this button to initate the recording of you heart rate and heart rate variability.
 
