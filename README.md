@@ -4,13 +4,13 @@
 
 ### Update signing 
 
-Start by going to Xcode -> Preferences -> Accounts and adding your Apple ID with the plus sign in the bottom right corner
+Start by going to Xcode -> Preferences -> Accounts and adding your Apple ID with the plus sign in the bottom left corner
 
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Xcode%20Accounts.png"/>
 
-Sign up for a Apple developer account with your Apple ID if you don't have one already [here](https://developer.apple.com/account/#!/welcome).
+Sign up for an Apple developer account with your Apple ID if you don't have one already [here](https://developer.apple.com/account/#!/welcome).
 
-Under HealthPlatformWatchOS -> Signing, change the team to your Apple account. It should say Your Name (Personal Team - youremail@email.com) Do this for each of the 3 targets in the targets sidebar.
+Under HealthPlatformWatchOS -> Signing, change the team to your Apple account. It should say Your Name (Personal Team - youremail@email.com). Do this for each of the 3 targets in the Targets sidebar.
 
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Signing.png"/>
 
@@ -48,9 +48,9 @@ After you have set the AWS Constants, relaunch the app and the IoT status should
 
 - Last Send Time: This shows the last time you sent data to AWS.
 
-- HR Sent: How many heart rate data points you just send to AWS.
+- HR Sent: How many heart rate data points you just sent to AWS.
 
-- HRV Sent: How many heart rate variability data points you just send to AWS.
+- HRV Sent: How many heart rate variability data points you just sent to AWS.
 
 - Send Data: Sends all datapoints from your last send time to now to AWS. Ensure the IoT Status says connected before sending the data.
 
