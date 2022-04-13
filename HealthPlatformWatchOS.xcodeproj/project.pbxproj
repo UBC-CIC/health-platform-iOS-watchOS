@@ -625,7 +625,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatformWatchOS.watchkitapp.watchkitextension";
+				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatform.watchkitapp.watchkitextension";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -662,7 +662,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatformWatchOS.watchkitapp.watchkitextension";
+				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatform.watchkitapp.watchkitextension";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -687,9 +687,9 @@
 				IBSC_MODULE = HealthPlatformWatchOS_WatchKit_Extension;
 				INFOPLIST_KEY_CFBundleDisplayName = "HealthPlatformWatchOS WatchKit App";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "UBC-CIC.HealthPlatformWatchOS";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "UBC-CIC.HealthPlatform";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatformWatchOS.watchkitapp";
+				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatform.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -713,9 +713,9 @@
 				IBSC_MODULE = HealthPlatformWatchOS_WatchKit_Extension;
 				INFOPLIST_KEY_CFBundleDisplayName = "HealthPlatformWatchOS WatchKit App";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "UBC-CIC.HealthPlatformWatchOS";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "UBC-CIC.HealthPlatform";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatformWatchOS.watchkitapp";
+				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatform.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -753,7 +753,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatformWatchOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatform";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -788,7 +788,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatformWatchOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "UBC-CIC.HealthPlatform";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;

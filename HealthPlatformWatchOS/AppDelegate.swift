@@ -2,7 +2,8 @@
 import UIKit
 import BackgroundTasks
 
-class AppDelegate: NSObject, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
     var healthDataManager = HealthDataManager()
     
     //Lock application orientation in portrait mode
@@ -16,7 +17,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
           using: nil) { (task) in
             self.handleAppRefreshTask(task: task as! BGAppRefreshTask)
         }
-        scheduleBackgroundDataSend()
+        var scheduledTasks = 0
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { (timer) in
+            BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
+                scheduledTasks = tasks.count
+            })
+            if (scheduledTasks == 0) {
+                self.scheduleBackgroundDataSend()
+            } else {
+                timer.invalidate()
+            }
+        }
         return true
     }
     
@@ -72,6 +83,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 })
             } catch {
                 print("Unable to submit task: \(error.localizedDescription)")
+                self.healthDataManager.checkRemainingBackgroundTasks(tasks: -1)
             }
         }
     }
