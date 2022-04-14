@@ -22,8 +22,7 @@ class HealthDataManager: NSObject, ObservableObject {
     
     //Set deviceID, set query time defaults, set connection status, and request HealthKit permissions.
     func setupSession() {
-        let allTypes = Set([
-                            HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!,
+        let allTypes = Set([HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!,
                             HKObjectType.quantityType(forIdentifier: .heartRate)!])
 
         healthStore.requestAuthorization(toShare: allTypes, read: allTypes) { (success, error) in

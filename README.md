@@ -29,7 +29,7 @@ The Apple Watch app may take a couple minutes to attach to your watch.
 
 ### Setting up the iOS app
 
-When the app is launched for the first time, you will be prompted to allow the app to read your HealthKit data. Accept all permissions in order for the app toe work,
+When the app is launched for the first time, you will be prompted to allow the app to read and write your HealthKit data. Accept all permissions in order for the app to work.
 
 After accepting the permissions, quit the app and go to the settings app. Navigate to HealthPlatformWatchOS and fill in the IoT Endpoint and Cognito Pool ID. Also ensure that the Background App Refresh setting is enabled.
 
