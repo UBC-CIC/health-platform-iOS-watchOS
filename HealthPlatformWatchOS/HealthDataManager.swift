@@ -20,8 +20,17 @@ class HealthDataManager: NSObject, ObservableObject {
     //Timer for updating IoT connection status
     var timer = Timer()
     
-    //Set deviceID, query time defaults, and set connection status.
+    //Set deviceID, set query time defaults, set connection status, and request HealthKit permissions.
     func setupSession() {
+        let allTypes = Set([
+                            HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!,
+                            HKObjectType.quantityType(forIdentifier: .heartRate)!])
+
+        healthStore.requestAuthorization(toShare: allTypes, read: allTypes) { (success, error) in
+            if !success {
+                print("Authorization failed")
+            }
+        }
         if defaults.string(forKey: "isHRSet") == nil {
             defaults.set((Int(Date().timeIntervalSince1970)), forKey: "lastHRQueryTime")
             defaults.set("Yes", forKey: "isHRSet")

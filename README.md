@@ -29,7 +29,9 @@ The Apple Watch app may take a couple minutes to attach to your watch.
 
 ### Setting up the iOS app
 
-After the iOS app has launched for the first time, quit the app and go to the settings app. Navigate to HealthPlatformWatchOS and fill in the IoT Endpoint and Cognito Pool ID. Also ensure that the Background App Refresh setting is enabled.
+When the app is launched for the first time, you will be prompted to allow the app to read your HealthKit data. Accept all permissions in order for the app toe work,
+
+After accepting the permissions, quit the app and go to the settings app. Navigate to HealthPlatformWatchOS and fill in the IoT Endpoint and Cognito Pool ID. Also ensure that the Background App Refresh setting is enabled.
 
 <p float="left">
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/App%20Settings%201.png" width="200"/>
@@ -51,6 +53,8 @@ After you have set the AWS Constants, relaunch the app and the IoT status should
 - HR Sent: How many heart rate data points you just sent to AWS.
 
 - HRV Sent: How many heart rate variability data points you just sent to AWS.
+
+- BGTasks: How many background tasks are currently scheduled. This should say 1 remaining. If it says 0 remaining or -1 remaining, restart the app.
 
 - Send Data: Sends all datapoints from your last send time to now to AWS. Ensure the IoT Status says connected before sending the data.
 
