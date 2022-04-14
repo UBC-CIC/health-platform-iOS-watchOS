@@ -54,7 +54,7 @@ After you have set the AWS Constants, relaunch the app and the IoT status should
 
 - HRV Sent: How many heart rate variability data points you just sent to AWS.
 
-- BGTasks: How many background tasks are currently scheduled. This should say 1 remaining. If it says 0 remaining or -1 remaining, restart the app.
+- BGTasks: How many background tasks are currently scheduled. When you open then app, it will say 0 remaning, but after a couple seconds the background task should get scheduled and display 1 remaining. If it continues to display 0 remaining, or if it ever shows -1 remaining, restart the app.
 
 - Send Data: Sends all datapoints from your last send time to now to AWS. Ensure the IoT Status says connected before sending the data.
 
