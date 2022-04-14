@@ -28,7 +28,7 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
-			<string>IoT Endpoit</string>
+			<string>IoT Endpoint</string>
 			<key>Key</key>
 			<string>iot_endpoint</string>
 			<key>DefaultValue</key>
