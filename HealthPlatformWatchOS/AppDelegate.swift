@@ -68,7 +68,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func scheduleBackgroundDataSend() {
         let queryTask = BGAppRefreshTaskRequest(identifier: "com.UBCCIC.queryData")
         //Set the minimum background fetch interval in seconds. This interval is not an exact time interval of when each background fetch will be run. Setting the interval states that a background fetch will happen AT MOST once per X seconds, Apple has its own algorithm for scheduling the actual runtimes.
-        queryTask.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 15)
+        queryTask.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 60)
         do {
             try BGTaskScheduler.shared.submit(queryTask)
             BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
