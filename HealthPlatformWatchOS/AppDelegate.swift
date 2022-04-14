@@ -2,8 +2,7 @@
 import UIKit
 import BackgroundTasks
 
-class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
+class AppDelegate: NSObject, UIApplicationDelegate {
     var healthDataManager = HealthDataManager()
     
     //Lock application orientation in portrait mode
@@ -35,56 +34,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func handleAppRefreshTask(task: BGAppRefreshTask) {
         //Triggers when the app refresh reaches 30 seconds of runtime
         task.expirationHandler = {
-            DispatchQueue.global(qos: .background).sync {
-                task.setTaskCompleted(success: false)
-                BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
-                    self.healthDataManager.checkRemainingBackgroundTasks(tasks: tasks.count)
-                    print("Tasks", tasks.count, tasks);
-                })
-            }
-        }
-        DispatchQueue.global(qos: .background).sync {
-            scheduleBackgroundDataSend()
-            if (healthDataManager.connectionStatus != "Connected") {
-                healthDataManager.mqttClient.connectToAWSIoT()
-            }
-            let connectionTimeoutLimit = Date().timeIntervalSince1970 + 28 //hard limit is a 30s
-            var connectionTimeoutLimitReached = false
-            while (healthDataManager.connectionStatus != "Connected") {
-                if (Date().timeIntervalSince1970 >= connectionTimeoutLimit) {
-                    connectionTimeoutLimitReached = true
-                    task.setTaskCompleted(success: false)
-                    break
-                }
-            }
-            if (connectionTimeoutLimitReached == false) {
-                healthDataManager.queryHeartRateData()
-                healthDataManager.queryHRVData()
-                task.setTaskCompleted(success: true)
-            }
+            self.healthDataManager.expirationReached()
+            task.setTaskCompleted(success: false)
             BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
-                self.healthDataManager.checkRemainingBackgroundTasks(tasks: tasks.count)
                 print("Tasks", tasks.count, tasks);
             })
         }
+        scheduleBackgroundDataSend()
+        if (healthDataManager.connectionStatus != "Connected") {
+            healthDataManager.mqttClient.connectToAWSIoT()
+        }
+        let connectionTimeoutLimit = Date().timeIntervalSince1970 + 28 //hard limit is a 30s
+        var connectionTimeoutLimitReached = false
+        while (healthDataManager.connectionStatus != "Connected") {
+            if (Date().timeIntervalSince1970 >= connectionTimeoutLimit) {
+                self.healthDataManager.expirationReached()
+                connectionTimeoutLimitReached = true
+                task.setTaskCompleted(success: false)
+                break
+            }
+        }
+        if (connectionTimeoutLimitReached == false) {
+            healthDataManager.queryHeartRateData()
+            healthDataManager.queryHRVData()
+            task.setTaskCompleted(success: true)
+        }
+        BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
+            print("Tasks", tasks.count, tasks);
+        })
     }
     
     //Schedules the background app refresh
     func scheduleBackgroundDataSend() {
-        DispatchQueue.global(qos: .background).sync {
-            let queryTask = BGAppRefreshTaskRequest(identifier: "com.UBCCIC.queryData")
-            //Set the minimum background fetch interval in seconds. This interval is not an exact time interval of when each background fetch will be run. Setting the interval states that a background fetch will happen AT MOST once per X seconds, Apple has its own algorithm for scheduling the actual runtimes.
-            queryTask.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 60)
-            do {
-                try BGTaskScheduler.shared.submit(queryTask)
-                BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
-                    self.healthDataManager.checkRemainingBackgroundTasks(tasks: tasks.count)
-                    print("Tasks", tasks.count, tasks);
-                })
-            } catch {
-                print("Unable to submit task: \(error.localizedDescription)")
-                self.healthDataManager.checkRemainingBackgroundTasks(tasks: -1)
-            }
+        let queryTask = BGAppRefreshTaskRequest(identifier: "com.UBCCIC.queryData")
+        //Set the minimum background fetch interval in seconds. This interval is not an exact time interval of when each background fetch will be run. Setting the interval states that a background fetch will happen AT MOST once per X seconds, Apple has its own algorithm for scheduling the actual runtimes.
+        queryTask.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 15)
+        do {
+            try BGTaskScheduler.shared.submit(queryTask)
+            BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
+                print("Tasks", tasks.count, tasks);
+            })
+        } catch {
+            print("Unable to submit task: \(error.localizedDescription)")
         }
     }
     

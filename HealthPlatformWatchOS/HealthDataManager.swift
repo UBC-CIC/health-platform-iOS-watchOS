@@ -2,6 +2,7 @@
 import Foundation
 import HealthKit
 import UIKit
+import BackgroundTasks
 
 class HealthDataManager: NSObject, ObservableObject {
     //Published variables which are updated in the UI
@@ -11,6 +12,7 @@ class HealthDataManager: NSObject, ObservableObject {
     @Published var HRDataPointsSent = 0
     @Published var HRVDataPointsSent = 0
     @Published var remainingBGTasks = 0
+    @Published var earliestBGTaskExecutionDate = Date()
     //Initialize the MQTT client
     var mqttClient = AWSViewModel()
     //Initialize HealthKit Store
@@ -41,21 +43,29 @@ class HealthDataManager: NSObject, ObservableObject {
         DispatchQueue.main.async {
             self.lastQueryTime = self.defaults.string(forKey: "lastQueryTime") ?? "Never Queried"
         }
-        updateConnectionStatus()
+        updateUIValues()
     }
     
-    //Repeatedly check for connection status from the MQTT client
-    func updateConnectionStatus() {
+    //Repeatedly check for connection status from the MQTT client and the status of Background Tasks
+    func updateUIValues() {
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
             DispatchQueue.main.async {
                 self.connectionStatus = self.mqttClient.connectionStatus
             }
+            BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
+                DispatchQueue.main.async {
+                    if (tasks.count != 0) {
+                        self.earliestBGTaskExecutionDate = tasks[0].earliestBeginDate ?? Date()
+                    }
+                    self.remainingBGTasks = tasks.count
+                }
+            })
         })
     }
     
-    func checkRemainingBackgroundTasks(tasks: Int) {
+    func expirationReached() {
         DispatchQueue.main.async {
-            self.remainingBGTasks = tasks
+            self.HRVDataPointsSent = -1
         }
     }
     

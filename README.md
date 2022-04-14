@@ -52,9 +52,11 @@ After you have set the AWS Constants, relaunch the app and the IoT status should
 
 - HR Sent: How many heart rate data points you just sent to AWS.
 
-- HRV Sent: How many heart rate variability data points you just sent to AWS.
+- HRV Sent: How many heart rate variability data points you just sent to AWS. If this ever shows -1 datapoints, a connection timeout occured. Check that you have a stable internet connection.
 
 - BGTasks: How many background tasks are currently scheduled. When you open then app, it will say 0 remaning, but after a couple seconds the background task should get scheduled and display 1 remaining. If it continues to display 0 remaining, or if it ever shows -1 remaining, restart the app.
+
+- Earliest BGTask Time: Earliest time that an automatic data sent can occur. If your background task did not register and shows 0 remaining, this will show a time in the past.
 
 - Send Data: Sends all datapoints from your last send time to now to AWS. Ensure the IoT Status says connected before sending the data.
 

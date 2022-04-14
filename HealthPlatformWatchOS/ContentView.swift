@@ -11,28 +11,26 @@ struct ContentView: View {
             .onAppear() {
                 healthDataManager.setupSession()
             }
-            .padding()
         
         Text("Device ID: \(healthDataManager.deviceID)")
-            .padding()
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
+            .padding()
         
         Text("Last Send Time: \(healthDataManager.lastQueryTime)")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
-            .padding()
         
         Text("HR Sent: \(healthDataManager.HRDataPointsSent) datapoints")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
-            .padding()
         
         Text("HRV Sent: \(healthDataManager.HRVDataPointsSent) datapoints")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
-            .padding()
         
-        //For testing purposes only, will be removed later
         Text("BGTasks: \(healthDataManager.remainingBGTasks) remaining")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
             .padding()
+        
+        Text("Earliest BGTask Time: \(healthDataManager.earliestBGTaskExecutionDate)")
+            .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
         
         Button("Send Data") {
             healthDataManager.queryHeartRateData()
