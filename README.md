@@ -40,7 +40,7 @@ Under HealthPlatformWatchOS -> Signing, change the team to your Apple account. I
 
 Next, at the top left corner of XCode, click the search icon and type AppBundle in the search bar, 2 results should show up.
 
-<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Bundle%20Identifier%20Search.png"/>
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Bundle%20Identifier%20Search.png" width="200"/>
 
 Change each of the 2 results to your respective new bundle indetifiers. WatchKit Companian App Bundle Indentifier should match the bundle identifier for HealthPlatformWatchOS, and WKAppBundleIdentifier should match the bundle identifier for HealthPlatformWatchOS WatchKit App.
 
