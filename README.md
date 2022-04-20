@@ -127,4 +127,6 @@ You must have a workout started either in this app or any other workout app for 
 
 ### Viewing your HealthKit Data
 
-To view your HealthKit data which is coming from the watch, open the Health app on your iPhone, tap browse in the bottom left corner, and then tap Heart from the list of Health Categories.
+To view your HealthKit data which is coming from the watch, open the Health app on your iPhone, tap browse in the bottom right corner, and then tap Heart from the list of Health Categories.
+
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/HealthKit.png" width="200"/>
