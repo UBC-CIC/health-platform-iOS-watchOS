@@ -55,7 +55,7 @@ The Apple Watch app may take a couple minutes to attach to your watch.
 
 When the app is launched for the first time, you will be prompted to allow the app to read and write your HealthKit data. Accept all permissions in order for the app to work.
 
-<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Iphone%20Permissions%20.png" width="200"/>
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Iphone%20Permissions.png" width="200"/>
 
 After accepting the permissions, quit the app and go to the settings app. Navigate to HealthPlatformWatchOS and fill in the IoT Endpoint and Cognito Pool ID. Also ensure that the Background App Refresh setting is enabled.
 
