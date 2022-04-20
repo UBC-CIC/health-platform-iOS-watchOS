@@ -2,6 +2,30 @@
 
 ## iOS and WatchOS app deployment
 
+### Downloading XCode
+
+Start by downloading XCode from the App Store. You will require a Mac on an OS able to run XCode, an iPhone running minimum iOS 14.0, and an Apple Watch running minimum WatchOS 7.0.
+
+As of April 19 2022, the current XCode version is 13.3.1. For this version of XCode, your Mac will need a minimum OS of macOS Monterey 12. In the future as XCode continues to get updated, find the minimum macOS required [here](https://developer.apple.com/support/xcode).
+
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/XCode.png"/>
+
+Download and install the XCode app. This will take a while. 
+
+### Cloning the repository
+
+In the Github repo, click the green Code button and copy the HTTPS Clone link.
+
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Clone%20Link.png"/>
+
+Now open XCode and you should see this screen.
+
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/XCode%20Startup.png"/>
+
+Click on clone an existing project. Paste the HTTPS Clone link you copied earlier into the text box at the top of the screen and click clone. You will be prompted to login to your Github account which has access to this repo.
+
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Clone.png"/>
+    
 ### Update signing 
 
 Start by going to Xcode -> Preferences -> Accounts and adding your Apple ID with the plus sign in the bottom left corner
@@ -30,6 +54,8 @@ The Apple Watch app may take a couple minutes to attach to your watch.
 ### Setting up the iOS app
 
 When the app is launched for the first time, you will be prompted to allow the app to read and write your HealthKit data. Accept all permissions in order for the app to work.
+
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Iphone%20Permissions%20.png" width="200"/>
 
 After accepting the permissions, quit the app and go to the settings app. Navigate to HealthPlatformWatchOS and fill in the IoT Endpoint and Cognito Pool ID. Also ensure that the Background App Refresh setting is enabled.
 
@@ -62,6 +88,16 @@ After you have set the AWS Constants, relaunch the app and the IoT status should
 
 You can also leave your app in the background where it will periodically send data automatically. However, this is unpredictable as Apple has an algorithm which determines when this will happen which may take a long time before triggering. Therefore, it is best to trigger data sends with the button in the app if you can. The automatic data send will not work if you force quit/terminate your app.
 
+### WatchOS App Setup
+
+Start by accepting all permissions for the Apple Watch. Tap Review on the first window, then All Requested Data Below and Next for the next 2 windows.
+
+<p float="left">
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Watch%20Permissions%201.png"  width="200"/>
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Watch%20Permissions%202.png" width="200"/>
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Watch%20Permissions%203.png"  width="200"/>
+</p>
+
 ### WatchOS App Overview
 
 <p float="left">
@@ -77,3 +113,7 @@ You can also leave your app in the background where it will periodically send da
 - Stop Pause: Swipe left to pause or end the workout.
 
 You must have a workout started either in this app or any other workout app for your heart rate and heart rate variability to be constantly monitored.
+
+### Viewing your HealthKit Data
+
+To view your HealthKit data which is coming from the watch, open the Health app on your iPhone, tap browse in the bottom left corner, and then tap Heart from the list of Health Categories.
