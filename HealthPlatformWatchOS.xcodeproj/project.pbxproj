@@ -114,7 +114,6 @@
 		E976FD3A27E9244A00133411 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E98A94A92804C8DE00DAE8C4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E98D5D2628062C33000C8451 /* Xcode Accounts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Xcode Accounts.png"; sourceTree = "<group>"; };
-		E98D5D2728063133000C8451 /* Signing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Signing.png; sourceTree = "<group>"; };
 		E98D5D2828063446000C8451 /* Run App 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Run App 1.png"; sourceTree = "<group>"; };
 		E98D5D292806344D000C8451 /* Run App 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Run App 2.png"; sourceTree = "<group>"; };
 		E98D5D2A28063600000C8451 /* App Settings 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "App Settings 1.png"; sourceTree = "<group>"; };
@@ -128,6 +127,10 @@
 		E9B1E01B28107D9B00315FBD /* Watch Permissions 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Watch Permissions 3.png"; sourceTree = "<group>"; };
 		E9B1E01C28107D9B00315FBD /* Watch Permissions 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Watch Permissions 2.png"; sourceTree = "<group>"; };
 		E9B1E01D28107DF300315FBD /* Watch Permissions 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Watch Permissions 1.png"; sourceTree = "<group>"; };
+		E9B1E01E281087BF00315FBD /* Signing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Signing.png; sourceTree = "<group>"; };
+		E9B1E01F281089FC00315FBD /* Bundle Identifier Search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Bundle Identifier Search.png"; sourceTree = "<group>"; };
+		E9B1E02028108ACD00315FBD /* Bundle Update 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Bundle Update 1.png"; sourceTree = "<group>"; };
+		E9B1E02128108ACD00315FBD /* Bundle Update 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Bundle Update 2.png"; sourceTree = "<group>"; };
 		E9E22B3627EA50EA00C1EB40 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9FC4CA327D02C1D00843A96 /* AWSViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSViewModel.swift; sourceTree = "<group>"; };
 		E9FC4CA527D0495C00843A96 /* AWSConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSConstants.swift; sourceTree = "<group>"; };
@@ -179,11 +182,14 @@
 				E9B1E01D28107DF300315FBD /* Watch Permissions 1.png */,
 				E9B1E01C28107D9B00315FBD /* Watch Permissions 2.png */,
 				E9B1E01B28107D9B00315FBD /* Watch Permissions 3.png */,
+				E9B1E01F281089FC00315FBD /* Bundle Identifier Search.png */,
+				E9B1E02028108ACD00315FBD /* Bundle Update 1.png */,
+				E9B1E02128108ACD00315FBD /* Bundle Update 2.png */,
 				E98D5D2828063446000C8451 /* Run App 1.png */,
 				E98D5D292806344D000C8451 /* Run App 2.png */,
 				E98D5D2A28063600000C8451 /* App Settings 1.png */,
 				E98D5D2B28063607000C8451 /* App Settings 2.png */,
-				E98D5D2728063133000C8451 /* Signing.png */,
+				E9B1E01E281087BF00315FBD /* Signing.png */,
 				E98D5D2628062C33000C8451 /* Xcode Accounts.png */,
 			);
 			path = "README Images";

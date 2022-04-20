@@ -26,7 +26,7 @@ Click on clone an existing project. Paste the HTTPS Clone link you copied earlie
 
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Clone.png"/>
     
-### Update signing 
+### Update signing and bundle indentifiers
 
 Start by going to Xcode -> Preferences -> Accounts and adding your Apple ID with the plus sign in the bottom left corner
 
@@ -34,9 +34,20 @@ Start by going to Xcode -> Preferences -> Accounts and adding your Apple ID with
 
 Sign up for an Apple developer account with your Apple ID if you don't have one already [here](https://developer.apple.com/account/#!/welcome).
 
-Under HealthPlatformWatchOS -> Signing, change the team to your Apple account. It should say Your Name (Personal Team - youremail@email.com). Do this for each of the 3 targets in the Targets sidebar.
+Under HealthPlatformWatchOS -> Signing, change the team to your Apple account. It should say Your Name (Personal Team - youremail@email.com). Also change the bundle identifier to a different string, anything works as long as XCode doesn't show any errors. Do this for each of the 3 targets in the Targets sidebar.
 
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Signing.png"/>
+
+Next, at the top left corner of XCode, click the search icon and type AppBundle in the search bar, 2 results should show up.
+
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Bundle%20Indentifier%20Search.png"/>
+
+Change each of the 2 results to your respective new bundle indetifiers. WatchKit Companian App Bundle Indentifier should match the bundle identifier for HealthPlatformWatchOS, and WKAppBundleIdentifier should match the bundle identifier for HealthPlatformWatchOS WatchKit App.
+
+<p float="left">
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Bundle%20Update%201.png"/>
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Bundle%20Update%202.png"/>
+</p>
 
 ### Deploying to your device
 
