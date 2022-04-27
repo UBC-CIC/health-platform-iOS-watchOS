@@ -53,8 +53,6 @@ Change each of the 2 results to your respective new bundle indetifiers. WatchKit
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Bundle%20Update%202.png"/>
 </p>
 
-The very first time you build and run the app on your device, the build will fail. To fix this, go to the settings app -> General -> VPN & Device Management -> Apple Development: YourAppleID@email.com and trust the developer. 
-
 ### Deploying to your device
 
 Plug in your iPhone to your Mac and make sure your Apple Watch is connected to the iPhone.
@@ -67,6 +65,8 @@ The Apple Watch app may take a couple minutes to attach to your watch.
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Run%20App%201.png"/>
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Run%20App%202.png"/>
 </p>
+
+The very first time you build and run the app on your device, the build will fail. To fix this, go to the settings app -> General -> VPN & Device Management -> Apple Development: YourAppleID@email.com and trust the developer. 
 
 ### Finding your AWS Constants
 
