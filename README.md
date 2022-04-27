@@ -1,5 +1,9 @@
 # Health Platform iOS/WatchOS
 
+## HealthPlatform frontend/backend deployment
+
+Start by following the instructions [here](https://github.com/UBC-CIC/health-platform/tree/main/webapp) to deploy both the backend and frontend of the main Health Platform project. This will create a Cognito Pool for you, which along with the IoT Endpoint will be used later to send your data to AWS.
+
 ## iOS and WatchOS app deployment
 
 ### Downloading XCode
@@ -60,6 +64,22 @@ The Apple Watch app may take a couple minutes to attach to your watch.
 <p float="left">
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Run%20App%201.png"/>
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Run%20App%202.png"/>
+</p>
+
+### Finding your AWS Constants
+
+To connect and send your data to AWS, you'll have to find 2 constants through the AWS console.
+
+IOT ENDPOINT: IoT Core -> Settings -> Device Data Enpoint
+
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/IoT%20Endpoint.png"/>
+
+COGNITO POOL: Cognito -> Manage Identity Pools -> HealthPlatformIdentityPool -> Edit Identity Pool -> Identity pool ID
+
+<p float="left">
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Cognito%201.png"/>
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Cognito%202.png"/>
+<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Cognito%203.png"/>
 </p>
 
 ### Setting up the iOS app
