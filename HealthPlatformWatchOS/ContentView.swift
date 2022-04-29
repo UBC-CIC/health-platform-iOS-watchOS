@@ -27,9 +27,11 @@ struct ContentView: View {
         
         Text("BGTasks: \(healthDataManager.remainingBGTasks) remaining")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
-            .padding()
         
         Text("Earliest BGTask Time: \(healthDataManager.earliestBGTaskExecutionDate)")
+            .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
+        
+        Text("Error: \(healthDataManager.error)")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
         
         Button("Send Data") {

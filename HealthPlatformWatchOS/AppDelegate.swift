@@ -1,10 +1,10 @@
 
 import UIKit
 import BackgroundTasks
-
+    
 class AppDelegate: NSObject, UIApplicationDelegate {
     var healthDataManager = HealthDataManager()
-    
+        
     //Lock application orientation in portrait mode
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return UIInterfaceOrientationMask(rawValue: UIInterfaceOrientationMask.portrait.rawValue)
@@ -34,7 +34,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func handleAppRefreshTask(task: BGAppRefreshTask) {
         //Triggers when the app refresh reaches 30 seconds of runtime
         task.expirationHandler = {
-            self.healthDataManager.expirationReached()
+            self.healthDataManager.expirationReached(expirationCode: -2)
             task.setTaskCompleted(success: false)
             BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
                 print("Tasks", tasks.count, tasks);
@@ -44,20 +44,24 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if (healthDataManager.connectionStatus != "Connected") {
             healthDataManager.mqttClient.connectToAWSIoT()
         }
-        let connectionTimeoutLimit = Date().timeIntervalSince1970 + 28 //hard limit is a 30s
+        let connectionTimeoutLimit = Date().timeIntervalSince1970 + 10 //hard limit is a 30s
         var connectionTimeoutLimitReached = false
         while (healthDataManager.connectionStatus != "Connected") {
             if (Date().timeIntervalSince1970 >= connectionTimeoutLimit) {
-                self.healthDataManager.expirationReached()
+                self.healthDataManager.expirationReached(expirationCode: -1)
                 connectionTimeoutLimitReached = true
                 task.setTaskCompleted(success: false)
                 break
             }
         }
         if (connectionTimeoutLimitReached == false) {
-            healthDataManager.queryHeartRateData()
-            healthDataManager.queryHRVData()
-            task.setTaskCompleted(success: true)
+            self.healthDataManager.queryHeartRateData()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                self.healthDataManager.queryHRVData()
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+                task.setTaskCompleted(success: true)
+            }
         }
         BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
             print("Tasks", tasks.count, tasks);
@@ -67,7 +71,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     //Schedules the background app refresh
     func scheduleBackgroundDataSend() {
         let queryTask = BGAppRefreshTaskRequest(identifier: "com.UBCCIC.queryData")
-        //Set the minimum background fetch interval in seconds. This interval is not an exact time interval of when each background fetch will be run. Setting the interval states that a background fetch will happen AT MOST once per X seconds, Apple has its own algorithm for scheduling the actual runtimes.
+        //Set the minimum background refresh interval in seconds. This interval is not an exact time interval of when each background refresh will be run. Setting the interval states that a background fetch will happen AT MOST once per X seconds, Apple has its own algorithm for scheduling the actual runtimes.
         queryTask.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 60)
         do {
             try BGTaskScheduler.shared.submit(queryTask)
@@ -83,34 +87,4 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         BGTaskScheduler.shared.cancelAllTaskRequests()
     }
-    
-    //    //Set the minimum background fetch interval in seconds. This interval is not an exact time interval of when each background fetch will be run. Setting the interval states that a background fetch will happen AT MOST once per X seconds, Apple determines the actual runtimes.
-    //    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    //        DispatchQueue.global(qos: .background).sync {
-    //            application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
-    //            healthDataManager.yes()
-    //            return true
-    //        }
-    //    }
-    //
-    //    //Execute HealthKit Query and send to IoT synchonously on the background thread after verifying there is a connection to IoT. If this cannot be completed within the seconds specified by connectionTimeoutLimit, the background fetch will fail.
-    //    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-    //        DispatchQueue.global(qos: .background).sync {
-    //            var connectionTimeoutCount = 0
-    //            let connectionTimeoutLimit = 25 //Hard limit for a background fetch is 30s
-    //            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { (timer) in
-    //                connectionTimeoutCount += 1
-    //                if self.healthDataManager.connectionStatus == "Connected" {
-    //                    self.healthDataManager.queryHeartRateData()
-    //                    self.healthDataManager.queryHRVData()
-    //                    completionHandler(.newData)
-    //                    timer.invalidate()
-    //                } else if connectionTimeoutCount == connectionTimeoutLimit {
-    //                    self.healthDataManager.yes()
-    //                    completionHandler(.failed)
-    //                    timer.invalidate()
-    //                }
-    //            }
-    //        }
-    //    }
 }

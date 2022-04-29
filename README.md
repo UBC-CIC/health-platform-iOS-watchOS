@@ -70,7 +70,7 @@ The very first time you build and run the app on your device, the build will fai
 
 ### Finding your AWS Constants
 
-To connect and send your data to AWS, you'll have to find 2 constants through the AWS console.
+To connect and send your data to AWS, you'll have to find 2 constants through the AWS console. Ensure that you are using the AWS console in the US-WEST-2 region.
 
 IOT ENDPOINT: IoT Core -> Settings -> Device Data Enpoint
 
@@ -99,6 +99,8 @@ After accepting the permissions, quit the app and go to the settings app. Naviga
 
 After you have set the AWS Constants, relaunch the app and the IoT status should say Connected. If this is not the case, check that you are connected to WiFi, and also that you entered your IoT Endpoint and Cognito Pool ID correctly.
 
+At this time, also register the user and device ID in the frontend.
+
 ### iOS app overview
 
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/iOS%20App.png" width="200"/>
@@ -111,15 +113,19 @@ After you have set the AWS Constants, relaunch the app and the IoT status should
 
 - HR Sent: How many heart rate data points you just sent to AWS.
 
-- HRV Sent: How many heart rate variability data points you just sent to AWS. If this ever shows -1 datapoints, a connection timeout occured. Check that you have a stable internet connection.
+- HRV Sent: How many heart rate variability data points you just sent to AWS.
 
-- BGTasks: How many background tasks are currently scheduled. When you open then app, it will say 0 remaning, but after a couple seconds the background task should get scheduled and display 1 remaining. If it continues to display 0 remaining, or if it ever shows -1 remaining, restart the app.
+- BGTasks: How many background tasks are currently scheduled. When you open then app, it will say 0 remaning, but after a couple seconds the background task should get scheduled and display 1 remaining. If it continues to display 0 remaining, restart the app.
 
 - Earliest BGTask Time: Earliest time that an automatic data sent can occur. If your background task did not register and shows 0 remaining, this will show a time in the past.
+
+- Error: Will display any error codes. -1 indicates a connection timeout, ensure you have a stable internet connection. -2 indicates the background task expiration task reached the expiration handler, ensure that background app refresh is enabled and that low power mode is disabled. 0 indicates there are no errors.
 
 - Send Data: Sends all datapoints from your last send time to now to AWS. Ensure the IoT Status says connected before sending the data.
 
 You can also leave your app in the background where it will periodically send data automatically. However, this is unpredictable as Apple has an algorithm which determines when this will happen which may take a long time before triggering. Therefore, it is best to trigger data sends with the button in the app if you can. The automatic data send will not work if you force quit/terminate your app.
+
+Any data that is sent will appear in the Health Platform dashboard. If you find that you missing data, try leaving the app open for a couple minutes and the app should sync and send any missing data to the frontend.
 
 ### WatchOS App Setup
 

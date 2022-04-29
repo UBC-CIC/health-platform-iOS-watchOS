@@ -13,6 +13,7 @@ class HealthDataManager: NSObject, ObservableObject {
     @Published var HRVDataPointsSent = 0
     @Published var remainingBGTasks = 0
     @Published var earliestBGTaskExecutionDate = Date()
+    @Published var error = 0
     //Initialize the MQTT client
     var mqttClient = AWSViewModel()
     //Initialize HealthKit Store
@@ -63,9 +64,9 @@ class HealthDataManager: NSObject, ObservableObject {
         })
     }
     
-    func expirationReached() {
+    func expirationReached(expirationCode: Int) {
         DispatchQueue.main.async {
-            self.HRVDataPointsSent = -1
+            self.error = expirationCode
         }
     }
     
