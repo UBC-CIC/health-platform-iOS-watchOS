@@ -59,6 +59,7 @@ class WorkoutManager: NSObject, ObservableObject {
         let typesToRead: Set = [
             HKQuantityType.quantityType(forIdentifier: .heartRate)!,
             HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!,
+            HKQuantityType.quantityType(forIdentifier: .stepCount)!,
         ]
         
         // Request authorization for those quantity types.

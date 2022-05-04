@@ -44,7 +44,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if (healthDataManager.connectionStatus != "Connected") {
             healthDataManager.mqttClient.connectToAWSIoT()
         }
-        let connectionTimeoutLimit = Date().timeIntervalSince1970 + 10 //hard limit is a 30s
+        let connectionTimeoutLimit = Date().timeIntervalSince1970 + 20 //hard limit is a 30s
         var connectionTimeoutLimitReached = false
         while (healthDataManager.connectionStatus != "Connected") {
             if (Date().timeIntervalSince1970 >= connectionTimeoutLimit) {
@@ -55,13 +55,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             }
         }
         if (connectionTimeoutLimitReached == false) {
-            self.healthDataManager.queryHeartRateData()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                self.healthDataManager.queryHRVData()
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
-                task.setTaskCompleted(success: true)
-            }
+//            self.healthDataManager.queryHeartRateData()
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+//                self.healthDataManager.queryHRVData()
+//            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+//                task.setTaskCompleted(success: true)
+//            }
+            self.healthDataManager.sendDataToAWS()
         }
         BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
             print("Tasks", tasks.count, tasks);
