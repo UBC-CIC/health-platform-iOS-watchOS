@@ -255,13 +255,13 @@ class HealthDataManager: NSObject, ObservableObject {
     //Send data to IoT Endpoint
     func sendDataToAWS() {
         queryHeartRateData()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.queryHRVData()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.queryStepsData()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             if (self.dataArray.isEmpty == false) {
                 let data: [String: Any] = [
                     "sensorId": self.deviceID,

@@ -4,7 +4,7 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.UBCCIC.queryData</string>
+		<string>com.HealthPlatform.queryData</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

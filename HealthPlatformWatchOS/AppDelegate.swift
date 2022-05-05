@@ -12,7 +12,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     //Register the background refresh task and schedule task
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.UBCCIC.queryData",
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.HealthPlatform.queryData",
           using: nil) { (task) in
             self.handleAppRefreshTask(task: task as! BGAppRefreshTask)
         }
@@ -63,6 +63,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 //                task.setTaskCompleted(success: true)
 //            }
             self.healthDataManager.sendDataToAWS()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                task.setTaskCompleted(success: true)
+            }
         }
         BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
             print("Tasks", tasks.count, tasks);
@@ -71,7 +75,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     //Schedules the background app refresh
     func scheduleBackgroundDataSend() {
-        let queryTask = BGAppRefreshTaskRequest(identifier: "com.UBCCIC.queryData")
+        let queryTask = BGAppRefreshTaskRequest(identifier: "com.HealthPlatform.queryData")
         //Set the minimum background refresh interval in seconds. This interval is not an exact time interval of when each background refresh will be run. Setting the interval states that a background fetch will happen AT MOST once per X seconds, Apple has its own algorithm for scheduling the actual runtimes.
         queryTask.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 60)
         do {
