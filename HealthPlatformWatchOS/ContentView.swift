@@ -35,7 +35,7 @@ struct ContentView: View {
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
         
         Button("Send Data") {
-            healthDataManager.sendDataToAWS()
+            healthDataManager.sendDataToAWSButton()
         }.buttonStyle(GrowingButton())
             .font(Font.system(size: 30, weight: .regular, design: .default).monospacedDigit())
     }

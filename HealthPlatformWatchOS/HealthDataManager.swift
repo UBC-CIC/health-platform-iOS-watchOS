@@ -111,7 +111,6 @@ class HealthDataManager: NSObject, ObservableObject {
                     self.HRVDataPointsSent = count
                 }
                 if (count > 0) {
-//                    self.sendDataToAWS(measurements: resultStringData, measurementType: "HeartRateVariability", timestamps: resultStringTimestamps)
                     let data: [String: Any] = [
                         "measurementType": "HeartRateVariability",
                         "measurement": resultStringData,
@@ -177,7 +176,6 @@ class HealthDataManager: NSObject, ObservableObject {
                     self.HRDataPointsSent = count
                 }
                 if (count > 0) {
-//                    self.sendDataToAWS(measurements: resultStringData, measurementType: "HeartRate", timestamps: resultStringTimestamps)
                     let data: [String: Any] = [
                         "measurementType": "HeartRate",
                         "measurement": resultStringData,
@@ -215,7 +213,6 @@ class HealthDataManager: NSObject, ObservableObject {
             let timestamp = formatter.string(from: Date())
             if (stepsValue > 0 && stepsValue > self.defaults.double(forKey: "lastStepsValue")) {
                 self.defaults.set(stepsValue, forKey: "lastStepsValue")
-//                self.sendDataToAWS(measurements: String(stepsValue), measurementType: "Steps", timestamps: timestamp)
                 let data: [String: Any] = [
                     "measurementType": "Steps",
                     "measurement": String(stepsValue),
@@ -236,24 +233,9 @@ class HealthDataManager: NSObject, ObservableObject {
         return String(data: data, encoding: String.Encoding.utf8)
     }
     
-//    //Send data to IoT Endpoint
-//    func sendDataToAWS(measurements: String, measurementType: String, timestamps: String) {
-//
-//        let data: [String: Any] = [
-//            "sensorId": self.deviceID,
-//            "measurementType": measurementType,
-//            "measurement": measurements,
-//            "timestamp": timestamps
-//        ]
-//
-//        let jsonDataString = dataToJson(from: data)
-//        if (jsonDataString != nil) {
-//            print("Published : \(String(describing: jsonDataString))")
-//        }
-//        mqttClient.publishMessage(message: jsonDataString)
-//    }
-    //Send data to IoT Endpoint
-    func sendDataToAWS() {
+    //Send data to IoT Endpoint for UI button
+    func sendDataToAWSButton() {
+        //slight delay required to ensure healthkit queries complete
         queryHeartRateData()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.queryHRVData()
@@ -271,6 +253,29 @@ class HealthDataManager: NSObject, ObservableObject {
                 if (jsonDataString != nil) {
                     print("Published : \(String(describing: jsonDataString))")
                 }
+                self.dataArray.removeAll()
+                self.mqttClient.publishMessage(message: jsonDataString)
+            }
+        }
+    }
+    
+    //Send data to IoT Endpoint for BGTask
+    func sendDataToAWSBGTask() {
+        //slight delay required to ensure healthkit queries complete
+        queryHeartRateData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.queryHRVData()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+            self.queryStepsData()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
+            if (self.dataArray.isEmpty == false) {
+                let data: [String: Any] = [
+                    "sensorId": self.deviceID,
+                    "data": self.dataArray
+                ]
+                let jsonDataString = self.dataToJson(from: data)
                 self.dataArray.removeAll()
                 self.mqttClient.publishMessage(message: jsonDataString)
             }
