@@ -35,10 +35,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         //Triggers when the app refresh reaches 30 seconds of runtime
         task.expirationHandler = {
             self.healthDataManager.expirationReached(expirationCode: -2)
+            self.healthDataManager.updateUIValues()
             task.setTaskCompleted(success: false)
-            BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
-                print("Tasks", tasks.count, tasks);
-            })
         }
         scheduleBackgroundDataSend()
         if (healthDataManager.connectionStatus != "Connected") {
@@ -57,12 +55,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if (connectionTimeoutLimitReached == false) {
             self.healthDataManager.sendDataToAWSBGTask()
             DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+                self.healthDataManager.updateUIValues()
                 task.setTaskCompleted(success: true)
             }
         }
-        BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
-            print("Tasks", tasks.count, tasks);
-        })
     }
     
     //Schedules the background app refresh
@@ -72,9 +68,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         queryTask.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 60)
         do {
             try BGTaskScheduler.shared.submit(queryTask)
-            BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
-                print("Tasks", tasks.count, tasks);
-            })
         } catch {
             print("Unable to submit task: \(error.localizedDescription)")
         }

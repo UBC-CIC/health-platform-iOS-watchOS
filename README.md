@@ -151,7 +151,7 @@ Start by accepting all permissions for the Apple Watch. Tap Review on the first 
 
 - Stop Pause: Swipe left to pause or end the workout.
 
-You must have a workout started either in this app or any other workout app for your heart rate and heart rate variability to be constantly monitored.
+You must have a workout started either in this app or any other workout app for your heart rate and heart rate variability to be constantly monitored. However, this can be quit taxing on the watch battery. Instead, you can also opt to not use the watch app and instead just wear the watch on your wrist. This will provide less frequent heart rate and heart rate variability values but will conserve your watch battery.
 
 ### Viewing your HealthKit Data
 

@@ -84,7 +84,6 @@ class HealthDataManager: NSObject, ObservableObject {
         let currentTime  = (Int)(Date().timeIntervalSince1970)
         let timeDifference = Double(currentTime - lastQueryTime)
         startDate = Date() - timeDifference
-        defaults.set(currentTime, forKey: "lastHRVQueryTime")
         
         //  Set the Predicates & Interval
         let predicate: NSPredicate? = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: HKQueryOptions.strictEndDate)
@@ -100,6 +99,7 @@ class HealthDataManager: NSObject, ObservableObject {
                     if (count == 0) {
                         resultStringData = String(round(latestHRV))
                         resultStringTimestamps = formatter.string(from:(result.endDate))
+                        self.defaults.set((Int)(result.endDate.timeIntervalSince1970), forKey: "lastHRVQueryTime")
                     } else {
                         resultStringData = resultStringData + ", " + String(latestHRV)
                         resultStringTimestamps = resultStringTimestamps + ", " + formatter.string(from:(result.endDate))
@@ -134,7 +134,6 @@ class HealthDataManager: NSObject, ObservableObject {
         let currentTime  = (Int)(Date().timeIntervalSince1970)
         let timeDifference = Double(currentTime - lastQueryTime)
         startDate = Date() - timeDifference
-        defaults.set(currentTime, forKey: "lastHRQueryTime")
         
         //  Set the Predicates & Interval
         let predicate: NSPredicate? = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: HKQueryOptions.strictEndDate)
@@ -150,6 +149,7 @@ class HealthDataManager: NSObject, ObservableObject {
                     if (count == 0) {
                         resultStringData = String(round(latestHeartRate))
                         resultStringTimestamps = formatter.string(from:(result.endDate))
+                        self.defaults.set((Int)(result.endDate.timeIntervalSince1970), forKey: "lastHRQueryTime")
                     } else {
                         resultStringData = resultStringData + ", " + String(latestHeartRate)
                         resultStringTimestamps = resultStringTimestamps + ", " + formatter.string(from:(result.endDate))
@@ -261,15 +261,16 @@ class HealthDataManager: NSObject, ObservableObject {
     
     //Send data to IoT Endpoint for BGTask
     func sendDataToAWSBGTask() {
+        timer.invalidate()
         //slight delay required to ensure healthkit queries complete
         queryHeartRateData()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.queryHRVData()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.queryStepsData()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
             if (self.dataArray.isEmpty == false) {
                 let data: [String: Any] = [
                     "sensorId": self.deviceID,
