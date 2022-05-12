@@ -211,8 +211,7 @@ class HealthDataManager: NSObject, ObservableObject {
             let formatter = ISO8601DateFormatter()
             formatter.formatOptions.insert(.withFractionalSeconds)
             let timestamp = formatter.string(from: Date())
-            if (stepsValue > 0 && stepsValue > self.defaults.double(forKey: "lastStepsValue")) {
-                self.defaults.set(stepsValue, forKey: "lastStepsValue")
+            if (stepsValue > 0) {
                 let data: [String: Any] = [
                     "measurementType": "Steps",
                     "measurement": String(stepsValue),
