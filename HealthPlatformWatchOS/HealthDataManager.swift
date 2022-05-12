@@ -80,9 +80,9 @@ class HealthDataManager: NSObject, ObservableObject {
         let sortDescriptor = NSSortDescriptor(key:HKSampleSortIdentifierStartDate, ascending: false)
         //Get unrecorded time from from current query time minus the last query time, and set record new times in user defaults
         var startDate: Date
-        let lastQueryTime = defaults.integer(forKey: "lastHRVQueryTime")
-        let currentTime  = (Int)(Date().timeIntervalSince1970)
-        let timeDifference = Double(currentTime - lastQueryTime)
+        let lastQueryTime = defaults.double(forKey: "lastHRVQueryTime")
+        let currentTime  = Date().timeIntervalSince1970
+        let timeDifference = currentTime - lastQueryTime
         startDate = Date() - timeDifference
         
         //  Set the Predicates & Interval
@@ -99,7 +99,7 @@ class HealthDataManager: NSObject, ObservableObject {
                     if (count == 0) {
                         resultStringData = String(round(latestHRV))
                         resultStringTimestamps = formatter.string(from:(result.endDate))
-                        self.defaults.set((Int)(result.endDate.timeIntervalSince1970), forKey: "lastHRVQueryTime")
+                        self.defaults.set(result.endDate.timeIntervalSince1970, forKey: "lastHRVQueryTime")
                     } else {
                         resultStringData = resultStringData + ", " + String(latestHRV)
                         resultStringTimestamps = resultStringTimestamps + ", " + formatter.string(from:(result.endDate))
@@ -130,9 +130,9 @@ class HealthDataManager: NSObject, ObservableObject {
         let sortDescriptor = NSSortDescriptor(key:HKSampleSortIdentifierStartDate, ascending: false)
         //Get unrecorded time from from current query time minus the last query time, and set record new times in user defaults
         var startDate: Date
-        let lastQueryTime = defaults.integer(forKey: "lastHRQueryTime")
-        let currentTime  = (Int)(Date().timeIntervalSince1970)
-        let timeDifference = Double(currentTime - lastQueryTime)
+        let lastQueryTime = defaults.double(forKey: "lastHRQueryTime")
+        let currentTime  = Date().timeIntervalSince1970
+        let timeDifference = currentTime - lastQueryTime
         startDate = Date() - timeDifference
         
         //  Set the Predicates & Interval
@@ -149,7 +149,7 @@ class HealthDataManager: NSObject, ObservableObject {
                     if (count == 0) {
                         resultStringData = String(round(latestHeartRate))
                         resultStringTimestamps = formatter.string(from:(result.endDate))
-                        self.defaults.set((Int)(result.endDate.timeIntervalSince1970), forKey: "lastHRQueryTime")
+                        self.defaults.set(result.endDate.timeIntervalSince1970, forKey: "lastHRQueryTime")
                     } else {
                         resultStringData = resultStringData + ", " + String(latestHeartRate)
                         resultStringTimestamps = resultStringTimestamps + ", " + formatter.string(from:(result.endDate))
