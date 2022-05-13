@@ -67,6 +67,7 @@ class HealthDataManager: NSObject, ObservableObject {
         })
     }
     
+    //For displaying errors in the UI. 0: no errors. -1: unable to connect to iot. -2: expiration handler reached. -3: bgTask could not be scheduled
     func expirationReached(expirationCode: Int) {
         DispatchQueue.main.async {
             self.error = expirationCode

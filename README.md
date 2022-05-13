@@ -119,7 +119,7 @@ At this time, also register the user and device ID in the frontend.
 
 - Earliest BGTask Time: Earliest time that an automatic data sent can occur. If your background task did not register and shows 0 remaining, this will show a time in the past.
 
-- Error: Will display any error codes. -1 indicates a connection timeout, ensure you have a stable internet connection. -2 indicates the background task expiration task reached the expiration handler, ensure that background app refresh is enabled and that low power mode is disabled. 0 indicates there are no errors.
+- Error: Will display any error codes. -1 indicates a connection timeout, ensure you have a stable internet connection. -2 indicates the background task expiration task reached the expiration handler, ensure that low power mode is disabled. -3 indicates that the background task cannot be scheduled, check that the Background App Refresh setting is enabled. 0 indicates there are no errors.
 
 - Send Data: Sends all datapoints from your last send time to now to AWS. Ensure the IoT Status says connected before sending the data.
 

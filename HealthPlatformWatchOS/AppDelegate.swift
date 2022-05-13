@@ -4,6 +4,7 @@ import BackgroundTasks
     
 class AppDelegate: NSObject, UIApplicationDelegate {
     var healthDataManager = HealthDataManager()
+    var bgTaskError = false
         
     //Lock application orientation in portrait mode
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
@@ -21,7 +22,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
                 scheduledTasks = tasks.count
             })
-            if (scheduledTasks == 0) {
+            if (self.bgTaskError == true) {
+                self.healthDataManager.expirationReached(expirationCode: -3)
+                timer.invalidate()
+            } else if (scheduledTasks == 0) {
                 self.scheduleBackgroundDataSend()
             } else {
                 timer.invalidate()
@@ -55,6 +59,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if (connectionTimeoutLimitReached == false) {
             self.healthDataManager.sendDataToAWSBGTask()
             DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+                self.healthDataManager.expirationReached(expirationCode: 0)
                 self.healthDataManager.updateUIValues()
                 task.setTaskCompleted(success: true)
             }
@@ -69,6 +74,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         do {
             try BGTaskScheduler.shared.submit(queryTask)
         } catch {
+            bgTaskError = true
             print("Unable to submit task: \(error.localizedDescription)")
         }
     }
