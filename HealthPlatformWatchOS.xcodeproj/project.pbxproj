@@ -108,6 +108,7 @@
 		E92FCC8F27CFFD870020E407 /* WorkoutManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
 		E92FCC9027CFFD870020E407 /* WorkoutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutView.swift; sourceTree = "<group>"; };
 		E92FCC9C27D001C20020E407 /* HealthDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataManager.swift; sourceTree = "<group>"; };
+		E9347212283425E300B81740 /* ipa File.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipa File.png"; sourceTree = "<group>"; };
 		E93CAA682810796700599996 /* Clone Link.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Clone Link.png"; sourceTree = "<group>"; };
 		E95C40CC280F7353000351FB /* XCode Startup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "XCode Startup.png"; sourceTree = "<group>"; };
 		E96DEC6E280F700800A6036E /* XCode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = XCode.png; sourceTree = "<group>"; };
@@ -175,6 +176,7 @@
 		E92B4B6D2806275700A70CA4 /* README Images */ = {
 			isa = PBXGroup;
 			children = (
+				E9347212283425E300B81740 /* ipa File.png */,
 				E98D5D2F28063CA1000C8451 /* Run Button.png */,
 				E98D5D2E28063CA1000C8451 /* Stop Pause.png */,
 				E98D5D2D28063CA1000C8451 /* Watch App.png */,
@@ -657,7 +659,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatform.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatformIOS.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -694,7 +696,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatform.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatformIOS.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -719,9 +721,9 @@
 				IBSC_MODULE = HealthPlatformWatchOS_WatchKit_Extension;
 				INFOPLIST_KEY_CFBundleDisplayName = "HealthPlatformWatchOS WatchKit App";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = HealthPlatform;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = HealthPlatformIOS;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatform.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatformIOS.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -745,9 +747,9 @@
 				IBSC_MODULE = HealthPlatformWatchOS_WatchKit_Extension;
 				INFOPLIST_KEY_CFBundleDisplayName = "HealthPlatformWatchOS WatchKit App";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = HealthPlatform;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = HealthPlatformIOS;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatform.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatformIOS.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -787,7 +789,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatform;
+				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatformIOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -824,7 +826,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatform;
+				PRODUCT_BUNDLE_IDENTIFIER = HealthPlatformIOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;

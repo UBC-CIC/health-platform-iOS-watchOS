@@ -126,7 +126,7 @@ class HealthDataManager: NSObject, ObservableObject {
     
     //Query from HealthKit the latest Heart Rate values since the last query, default query is from the first time you open the app
     func queryHeartRateData() {
-        let HRVType = HKQuantityType.quantityType(forIdentifier: .heartRate)
+        let HRType = HKQuantityType.quantityType(forIdentifier: .heartRate)
 
         let sortDescriptor = NSSortDescriptor(key:HKSampleSortIdentifierStartDate, ascending: false)
         //Get unrecorded time from from current query time minus the last query time, and set record new times in user defaults
@@ -138,7 +138,7 @@ class HealthDataManager: NSObject, ObservableObject {
         
         //  Set the Predicates & Interval
         let predicate: NSPredicate? = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: HKQueryOptions.strictEndDate)
-        let sampleQuery = HKSampleQuery(sampleType: HRVType!, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor]) { sampleQuery, results, error  in
+        let sampleQuery = HKSampleQuery(sampleType: HRType!, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor]) { sampleQuery, results, error  in
             if(error == nil) {
                 var count = 0
                 var resultStringData = ""
@@ -221,7 +221,6 @@ class HealthDataManager: NSObject, ObservableObject {
                 self.dataArray.append(data)
             }
         }
-        
         healthStore.execute(query)
     }
     
@@ -235,15 +234,11 @@ class HealthDataManager: NSObject, ObservableObject {
     
     //Send data to IoT Endpoint for UI button
     func sendDataToAWSButton() {
-        //slight delay required to ensure healthkit queries complete
         queryHeartRateData()
+        queryHRVData()
+        queryStepsData()
+        //slight delay required to ensure healthkit queries complete
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.queryHRVData()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.queryStepsData()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             if (self.dataArray.isEmpty == false) {
                 let data: [String: Any] = [
                     "sensorId": self.deviceID,
@@ -262,14 +257,9 @@ class HealthDataManager: NSObject, ObservableObject {
     //Send data to IoT Endpoint for BGTask
     func sendDataToAWSBGTask() {
         timer.invalidate()
-        //slight delay required to ensure healthkit queries complete
         queryHeartRateData()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.queryHRVData()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.queryStepsData()
-        }
+        queryHRVData()
+        queryStepsData()
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
             if (self.dataArray.isEmpty == false) {
                 let data: [String: Any] = [
@@ -278,6 +268,9 @@ class HealthDataManager: NSObject, ObservableObject {
                 ]
                 let jsonDataString = self.dataToJson(from: data)
                 self.dataArray.removeAll()
+//                if (jsonDataString != nil) {
+//                    print("Published : \(String(describing: jsonDataString))")
+//                }
                 self.mqttClient.publishMessage(message: jsonDataString)
             }
         }

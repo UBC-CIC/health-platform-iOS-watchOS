@@ -58,7 +58,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
         if (connectionTimeoutLimitReached == false) {
             self.healthDataManager.sendDataToAWSBGTask()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 13.0) {
                 self.healthDataManager.expirationReached(expirationCode: 0)
                 self.healthDataManager.updateUIValues()
                 task.setTaskCompleted(success: true)
