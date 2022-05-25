@@ -3,17 +3,20 @@ import Foundation
 import HealthKit
 import UIKit
 import BackgroundTasks
+import SwiftUI
 
 class HealthDataManager: NSObject, ObservableObject {
     //Published variables which are updated in the UI
     @Published var deviceID = UIDevice.current.identifierForVendor!.uuidString
     @Published var connectionStatus = "Not Connected"
+    @Published var connectionStatusIcon = "xmark.icloud"
+    @Published var connectionStatusIconColour = Color.red
     @Published var lastQueryTime = ""
     @Published var HRDataPointsSent = 0
     @Published var HRVDataPointsSent = 0
     @Published var remainingBGTasks = 0
-    @Published var earliestBGTaskExecutionDate = Date()
-    @Published var error = 0
+    @Published var earliestBGTaskExecutionDate = ""
+    @Published var error = ""
     //Initialize the MQTT client
     var mqttClient = AWSViewModel()
     //Initialize HealthKit Store
@@ -53,13 +56,36 @@ class HealthDataManager: NSObject, ObservableObject {
     //Repeatedly check for connection status from the MQTT client and the status of Background Tasks
     func updateUIValues() {
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
-            DispatchQueue.main.async {
-                self.connectionStatus = self.mqttClient.connectionStatus
+            if (self.connectionStatus != self.mqttClient.connectionStatus) {
+                DispatchQueue.main.async {
+                    self.connectionStatus = self.mqttClient.connectionStatus
+                    if (self.connectionStatus == "Connected") {
+                        self.connectionStatusIcon = "checkmark.icloud"
+                        self.connectionStatusIconColour = Color.green
+                    } else if (self.connectionStatus == "Reconnecting" || self.connectionStatus == "Connecting") {
+                        self.connectionStatusIcon = "arrow.clockwise.icloud"
+                        self.connectionStatusIconColour = Color.yellow
+                    } else {
+                        self.connectionStatusIcon = "xmark.icloud"
+                        self.connectionStatusIconColour = Color.red
+                    }
+                }
             }
             BGTaskScheduler.shared.getPendingTaskRequests(completionHandler: { tasks in
                 DispatchQueue.main.async {
                     if (tasks.count != 0) {
-                        self.earliestBGTaskExecutionDate = tasks[0].earliestBeginDate ?? Date()
+                        let bgTaskDate = tasks[0].earliestBeginDate ?? Date()
+                        let calendar = Calendar.current
+                        let hour = calendar.component(.hour, from: bgTaskDate)
+                        let minutes = calendar.component(.minute, from: bgTaskDate)
+                        let day = calendar.component(.day, from: bgTaskDate)
+                        let month = calendar.component(.month, from: bgTaskDate)
+                        let year = calendar.component(.year, from: bgTaskDate)
+                        if (minutes < 10) {
+                            self.earliestBGTaskExecutionDate = "\(month)-\(day)-\(year): \(hour):\(String(format: "%02d", minutes))"
+                        } else {
+                            self.earliestBGTaskExecutionDate = "\(month)-\(day)-\(year): \(hour):\(minutes)"
+                        }
                     }
                     self.remainingBGTasks = tasks.count
                 }
@@ -68,7 +94,7 @@ class HealthDataManager: NSObject, ObservableObject {
     }
     
     //For displaying errors in the UI. 0: no errors. -1: unable to connect to iot. -2: expiration handler reached. -3: bgTask could not be scheduled
-    func expirationReached(expirationCode: Int) {
+    func expirationReached(expirationCode: String) {
         DispatchQueue.main.async {
             self.error = expirationCode
         }

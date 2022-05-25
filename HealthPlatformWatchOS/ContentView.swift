@@ -5,8 +5,8 @@ struct ContentView: View {
     @EnvironmentObject var healthDataManager: HealthDataManager
     
     var body: some View {
-        
-        Text("IoT Status: \(healthDataManager.connectionStatus)")
+        (Text("IoT Status: \(healthDataManager.connectionStatus)") + Text(Image(systemName: healthDataManager.connectionStatusIcon))
+            .foregroundColor(healthDataManager.connectionStatusIconColour))
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
             .onAppear() {
                 healthDataManager.setupSession()
@@ -31,7 +31,7 @@ struct ContentView: View {
         Text("Earliest BGTask Time: \(healthDataManager.earliestBGTaskExecutionDate)")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
         
-        Text("Error: \(healthDataManager.error)")
+        Text("\(healthDataManager.error)")
             .font(Font.system(size: 25, weight: .regular, design: .default).monospacedDigit())
         
         Button("Send Data") {

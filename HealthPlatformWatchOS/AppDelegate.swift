@@ -23,7 +23,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 scheduledTasks = tasks.count
             })
             if (self.bgTaskError == true) {
-                self.healthDataManager.expirationReached(expirationCode: -3)
+                self.healthDataManager.expirationReached(expirationCode: "Unable to register a BGTask")
                 timer.invalidate()
             } else if (scheduledTasks == 0) {
                 self.scheduleBackgroundDataSend()
@@ -38,7 +38,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func handleAppRefreshTask(task: BGAppRefreshTask) {
         //Triggers when the app refresh reaches 30 seconds of runtime
         task.expirationHandler = {
-            self.healthDataManager.expirationReached(expirationCode: -2)
+            self.healthDataManager.expirationReached(expirationCode: "Last BGTask Expiration Handler Reached")
             self.healthDataManager.updateUIValues()
             task.setTaskCompleted(success: false)
         }
@@ -50,7 +50,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         var connectionTimeoutLimitReached = false
         while (healthDataManager.connectionStatus != "Connected") {
             if (Date().timeIntervalSince1970 >= connectionTimeoutLimit) {
-                self.healthDataManager.expirationReached(expirationCode: -1)
+                self.healthDataManager.expirationReached(expirationCode: "Last BGTask Was Unable to Connect")
                 connectionTimeoutLimitReached = true
                 task.setTaskCompleted(success: false)
                 break
@@ -59,7 +59,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if (connectionTimeoutLimitReached == false) {
             self.healthDataManager.sendDataToAWSBGTask()
             DispatchQueue.main.asyncAfter(deadline: .now() + 13.0) {
-                self.healthDataManager.expirationReached(expirationCode: 0)
+                self.healthDataManager.expirationReached(expirationCode: "")
                 self.healthDataManager.updateUIValues()
                 task.setTaskCompleted(success: true)
             }
@@ -70,7 +70,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func scheduleBackgroundDataSend() {
         let queryTask = BGAppRefreshTaskRequest(identifier: "com.HealthPlatform.queryData")
         //Set the minimum background refresh interval in seconds. This interval is not an exact time interval of when each background refresh will be run. Setting the interval states that a background fetch will happen AT MOST once per X seconds, Apple has its own algorithm for scheduling the actual runtimes.
-        queryTask.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 60)
+        queryTask.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 60 * 6)
         do {
             try BGTaskScheduler.shared.submit(queryTask)
         } catch {

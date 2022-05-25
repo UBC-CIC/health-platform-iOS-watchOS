@@ -43,8 +43,8 @@ class AWSViewModel {
                 case .connecting: connectionStatus = "Connecting"
                 case .connected: connectionStatus = "Connected"
                     print("Connected")
-                case .connectionError: connectionStatus = "Connection Error"
-                    print("error")
+                case .connectionError: connectionStatus = "Reconnecting"
+                    print("Connection Error")
                 case .connectionRefused: connectionStatus = "Connection Refused"
                     print("refused")
                     connectToAWSIoT()
