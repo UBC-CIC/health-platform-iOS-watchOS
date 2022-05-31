@@ -6,7 +6,7 @@ Start by following the instructions [here](https://github.com/UBC-CIC/health-pla
 
 ## iOS and WatchOS App Deployment (SIMPLE)
 
-** NOTE: This version of the app will only last on your device for 7 days as it is signed with a free developer account. **
+**NOTE: This version of the app will only last on your device for 7 days as it is signed with a free developer account.**
 
 Start by downloading the iOS App [here](https://d3hq6hb4fjgj76.cloudfront.net/HealthPlatform.ipa) onto your Mac.
 
@@ -48,7 +48,7 @@ Start by going to Xcode -> Preferences -> Accounts and adding your Apple ID with
 
 Sign up for an Apple developer account with your Apple ID if you don't have one already [here](https://developer.apple.com/account/#!/welcome).
 
-** NOTE: Using a free developer account to build and deploy this app to a device will cause the app to stop working after 7 days. To have the app remain working indefinitely, you will need to join the paid apple development program. More information [here](https://developer.apple.com/programs/enroll/). **
+**NOTE: Using a free developer account to build and deploy this app to a device will cause the app to stop working after 7 days. To have the app remain working indefinitely, you will need to join the paid apple development program. More information [here](https://developer.apple.com/programs/enroll/).**
 
 Under HealthPlatformWatchOS -> Signing, change the team to your Apple account. It should say Your Name (Personal Team - youremail@email.com). Also change the bundle identifier to a different string, anything works as long as XCode doesn't show any errors. Do this for each of the 3 targets in the Targets sidebar.
 
