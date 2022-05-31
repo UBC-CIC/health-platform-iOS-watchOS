@@ -2,9 +2,11 @@
 
 ## HealthPlatform frontend/backend deployment
 
-Start by following the instructions [here](https://github.com/UBC-CIC/health-platform/tree/main/webapp) to deploy both the backend and frontend of the main Health Platform project. This will create a Cognito Pool for you, which along with the IoT Endpoint will be used later to send your data to AWS.
+Start by following the instructions [here](https://github.com/UBC-CIC/health-platform/tree/main/webapp) to deploy both the backend and frontend of the main Health Platform project. This will create a Cognito Pool for you, which along with the IoT Endpoint will be used later to send your data to AWS. Also configure any gas sensors that you might have at this time.
 
 ## iOS and WatchOS App Deployment (SIMPLE)
+
+** NOTE: This version of the app will only last on your device for 7 days as it is signed with a free developer account. **
 
 Start by downloading the iOS App [here](https://d3hq6hb4fjgj76.cloudfront.net/HealthPlatform.ipa) onto your Mac.
 
@@ -45,6 +47,8 @@ Start by going to Xcode -> Preferences -> Accounts and adding your Apple ID with
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/Xcode%20Accounts.png"/>
 
 Sign up for an Apple developer account with your Apple ID if you don't have one already [here](https://developer.apple.com/account/#!/welcome).
+
+** NOTE: Using a free developer account to build and deploy this app to a device will cause the app to stop working after 7 days. To have the app remain working indefinitely, you will need to join the paid apple development program. More information [here](https://developer.apple.com/programs/enroll/). **
 
 Under HealthPlatformWatchOS -> Signing, change the team to your Apple account. It should say Your Name (Personal Team - youremail@email.com). Also change the bundle identifier to a different string, anything works as long as XCode doesn't show any errors. Do this for each of the 3 targets in the Targets sidebar.
 
@@ -137,6 +141,9 @@ Any data that is sent will appear in the Health Platform dashboard. If you find 
 
 ### WatchOS App Setup
 
+
+**NOTE: This app is completely optional. Continuously running a workout will deplete your watch battery very quickly. It is recommended to just wear your watch normally on your wrist without running any application. Your vitals will still continue to be monitored this way, although at a less frequent rate. If you would like to run a workout, the built in workout app on the Apple Watch works exactly the same way as this app.**
+
 Start by accepting all permissions for the Apple Watch. Tap Review on the first window, then All Requested Data Below and Next for the next 2 windows.
 
 <p float="left">
@@ -158,8 +165,6 @@ Start by accepting all permissions for the Apple Watch. Tap Review on the first 
 - Main App: You will see the time elapsed and your most recent heart rate reading.
 
 - Stop Pause: Swipe left to pause or end the workout.
-
-You must have a workout started either in this app or any other workout app for your heart rate and heart rate variability to be constantly monitored. However, this can be quit taxing on the watch battery. Instead, you can also opt to not use the watch app and instead just wear the watch on your wrist. This will provide less frequent heart rate and heart rate variability values but will conserve your watch battery.
 
 ### Viewing your HealthKit Data
 
