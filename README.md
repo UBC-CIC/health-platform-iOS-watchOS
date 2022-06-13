@@ -121,9 +121,9 @@ At this time, also register the user and device ID in the frontend.
 
 - Earliest BGTask Time: Earliest time that an automatic data sent can occur. If your background task did not register and shows 0 remaining, this will show a time in the past.
 
-- Error: Will display any error codes. -1 indicates a connection timeout, ensure you have a stable internet connection. -2 indicates the background task expiration task reached the expiration handler, ensure that low power mode is disabled. -3 indicates that the background task cannot be scheduled, check that the Background App Refresh setting is enabled. 0 indicates there are no errors.
-
 - Send Data: Sends all datapoints from your last send time to now to AWS. Ensure the IoT Status says connected before sending the data.
+
+If any error occurs while using the app, an error message will appear informing you of the error that has occurred.
 
 You can also leave your app in the background where it will periodically send data automatically. However, this is unpredictable as Apple has an algorithm which determines when this will happen which may take a long time before triggering. Therefore, it is best to trigger data sends with the button in the app if you can. The automatic data send will not work if you force quit/terminate your app.
 
