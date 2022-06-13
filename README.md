@@ -4,17 +4,7 @@
 
 Start by following the instructions [here](https://github.com/UBC-CIC/health-platform/tree/main/webapp) to deploy both the backend and frontend of the main Health Platform project. This will create a Cognito Pool for you, which along with the IoT Endpoint will be used later to send your data to AWS. Also configure any gas sensors that you might have at this time.
 
-## iOS and WatchOS App Deployment (SIMPLE)
-
-**NOTE: This version of the app will only last on your device for 7 days as it is signed with a free developer account.**
-
-Start by downloading the iOS App [here](https://d3hq6hb4fjgj76.cloudfront.net/HealthPlatform.ipa) onto your Mac.
-
-Plug your iPhone into your Mac and drag the ipa file over to your iPhone in the Finder window to install.
-
-<img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/ipa%20File.png"/>
-
-## iOS and WatchOS App Deployment (ADVANCED)
+## iOS and WatchOS App Deployment
 
 ### Downloading XCode
 
