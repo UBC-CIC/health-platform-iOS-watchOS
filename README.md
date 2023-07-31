@@ -167,7 +167,7 @@ To view your HealthKit data which is coming from the watch, open the Health app 
 
 ### Create a Build
 1. In Xcode, in the General tab under Identity, check that the Version number is set to 1.0 and the Build number is set to 1 **for your first deployment**. For future deployments, increment the Version number and reset the Build number for major updates (e.g. 1.0.1+1). For minor updates, incrementing just the Build number is sufficient (e.g. 1.0.0+2). Xcode will automatically increment the version and build number if this step is skipped.
-2. In Xcode, set the Target to be: `Runner > Any iOS Device`
+2. In Xcode, set the Target to be: `HealthPlatformWatchOS > Any iOS Device`
 ![Xcode Target](/README%20Images/xcode_deployment_target.png)
 3. Select `Product>Archive` in the Xcode menu bar. Wait for the archive to complete.
 4. Once the archive has completed, a window should appear showing all of your archives (This window can be accessed from the Xcode menu bar anytime through `Window > Organizer`). Select the most recent archive and click `Distribute App`
