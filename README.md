@@ -161,3 +161,26 @@ Start by accepting all permissions for the Apple Watch. Tap Review on the first 
 To view your HealthKit data which is coming from the watch, open the Health app on your iPhone, tap browse in the bottom right corner, and then tap Heart from the list of Health Categories.
 
 <img src="https://github.com/UBC-CIC/health-platform-iOS-watchOS/blob/master/README%20Images/HealthKit.png" width="200"/>
+
+
+## Deploy to TestFlight 
+
+### Create a Build
+1. In Xcode, in the General tab under Identity, check that the Version number is set to 1.0 and the Build number is set to 1 **for your first deployment**. For future deployments, increment the Version number and reset the Build number for major updates (e.g. 1.0.1+1). For minor updates, incrementing just the Build number is sufficient (e.g. 1.0.0+2). Xcode will automatically increment the version and build number if this step is skipped.
+2. In Xcode, set the Target to be: `Runner > Any iOS Device`
+![Xcode Target](/README%20Images/xcode_deployment_target.png)
+3. Select `Product>Archive` in the Xcode menu bar. Wait for the archive to complete.
+4. Once the archive has completed, a window should appear showing all of your archives (This window can be accessed from the Xcode menu bar anytime through `Window > Organizer`). Select the most recent archive and click `Distribute App`
+![Xcode Archives](/README%20Images/xcode_archives.png)
+5. Select `App Store Connect > Upload > Strip Swift Symbols + Upload your app's symbols + Manage Version and Build Number > Automatically manage signing > Upload`
+* Note: When creating your first build, you may be asked to set the SKU and primary language for the app. The SKU is an identifier for the app and can be the same as the App Bundle ID you set previously.
+
+### Add Testers
+
+1. Once the Xcode upload is complete, navigate to your app page in App Store Connect. Under `Builds > iOS`, there should be a list of builds uploaded from Xcode. Builds may take a few minutes to appear here. 
+2. Once the uploaded build appears, click on it, fill in the Test Details, and **add Testers by their Apple ID**
+3. Once a tester is added, the app should be automatically submitted for review. The reviewing process could take a few days to process.
+4. Once the build is processed, testers will recieve a code in their email for TestFlight.
+5. Testers can then install TestFlight from the Apple App Store on an iPhone running iOS 13.0 or later and sign in with their Apple ID. 
+6. In TestFlight, testers can press the `Redeem` button and enter the TestFlight code from their email. The app should then appear in TestFlight under Apps and testsers will be able to install the build.
+7. Builds uploaded to TestFlight have a lifespan of 90 days and will expire after that. To create another build of the app to upload to TestFlight after the 90 day period, please follow the steps above to [create another build](#create-a-build) and upload to TestFlight.
